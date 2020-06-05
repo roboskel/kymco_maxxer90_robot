@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>kymco_maxxer90_robot</name>
+  <version>0.0.1</version>
+  <description>The kymco_maxxer90_robot metapackage</description>
+
+  <maintainer email="gstavrinos@iit.demokritos.gr">George Stavrinos</maintainer>
+
+  <license>BSD</license>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <export>
+    <metapackage/>
+  </export>
+</package>
