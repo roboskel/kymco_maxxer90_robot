@@ -1,0 +1,138 @@
+<?xml version="1.0"?>
+<robot name="kymco_maxxer90" xmlns:xacro="http://ros.org/wiki/xacro"> 
+
+    <xacro:include filename="$(find kymco_maxxer90_description)/urdf/wheel.urdf.xacro"/>
+
+    <xacro:property name="PI" value="3.1415926535897931"/>
+    <xacro:property name="distance_from_ground" value="0.35"/> <!-- TODO -->
+    <xacro:property name="wheelbase" value="0.970"/>
+    <xacro:property name="wheel_diameter" value="0.4572"/>
+    <xacro:property name="wheel_width" value="0.15"/>
+    <xacro:property name="track" value="0.55"/>
+
+    <link name="base_link">
+        <visual>
+            <origin xyz="0 0 ${distance_from_ground}" rpy="0 0 0"/>
+            <geometry>
+                <mesh filename="package://kymco_maxxer90_description/meshes/chassis.stl" scale="1.0 1.0 1.0"/>
+            </geometry>
+            <material name="black">
+                <color rgba="0 0 0 1"/>
+            </material>
+        </visual>
+        <collision>
+            <origin xyz="0 0 ${distance_from_ground}" rpy="0 0 0"/>
+            <geometry>
+                <mesh filename="package://kymco_maxxer90_description/meshes/chassis.stl" scale="1.0 1.0 1.0"/>
+            </geometry>
+        </collision>
+    </link>
+
+    <link name="engine_link">
+        <visual>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <geometry>
+                <mesh filename="package://kymco_maxxer90_description/meshes/engine.stl" scale="1.0 1.0 1.0"/>
+            </geometry>
+            <material name="silver">
+                <color rgba="0.3 0.3 0.3 1"/>
+            </material>
+        </visual>
+        <collision>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <geometry>
+                <mesh filename="package://kymco_maxxer90_description/meshes/engine.stl" scale="1.0 1.0 1.0"/>
+            </geometry>
+        </collision>
+    </link>
+
+    <joint name="engine_joint" type="fixed">
+        <origin xyz="0 -0.08 ${distance_from_ground+0.05}" rpy="0 0 ${PI/2}"/>
+        <parent link="base_link" />
+        <child link="engine_link" />
+    </joint>
+
+    <xacro:kymco_maxxer90_wheel wheel_prefix="front_right">
+        <origin xyz="${track/2} 0.33 ${distance_from_ground/2}" rpy="0 0 ${PI/2}"/>
+    </xacro:kymco_maxxer90_wheel>
+
+    <xacro:kymco_maxxer90_wheel wheel_prefix="front_left">
+        <origin xyz="${-track/2} 0.33 ${distance_from_ground/2}" rpy="0 0 ${-PI/2}"/>
+    </xacro:kymco_maxxer90_wheel>
+
+    <xacro:kymco_maxxer90_wheel wheel_prefix="rear_left">
+        <origin xyz="${-track/2} ${0.33-wheelbase} ${distance_from_ground/2}" rpy="0 0 ${-PI/2}"/>
+    </xacro:kymco_maxxer90_wheel>
+
+    <xacro:kymco_maxxer90_wheel wheel_prefix="rear_right">
+        <origin xyz="${track/2} ${0.33-wheelbase} ${distance_from_ground/2}" rpy="0 0 ${PI/2}"/>
+    </xacro:kymco_maxxer90_wheel>
+
+
+    <link name="rear_axle_link">
+        <visual>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <geometry>
+                <mesh filename="package://kymco_maxxer90_description/meshes/differential.stl" scale="1.0 1.0 1.0"/>
+            </geometry>
+            <material name="silver"/>
+        </visual>
+        <collision>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <geometry>
+                <mesh filename="package://kymco_maxxer90_description/meshes/differential.stl" scale="1.0 1.0 1.0"/>
+            </geometry>
+        </collision>
+    </link>
+
+    <joint name="rear_axle_joint" type="fixed">
+        <origin xyz="0.03 ${0.33-wheelbase} ${distance_from_ground-wheel_diameter/2}" rpy="0 0 ${-PI/2}"/>
+        <parent link="base_link" />
+        <child link="rear_axle_link" />
+    </joint>
+
+    <link name="front_plate_link">
+        <visual>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <geometry>
+                <box size="0.4 0.3 0.01"/>
+            </geometry>
+            <material name="silver"/>
+        </visual>
+        <collision>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <geometry>
+                <box size="0.4 0.3 0.01"/>
+            </geometry>
+        </collision>
+    </link>
+
+    <joint name="front_plate_joint" type="fixed">
+        <origin xyz="0 0.45 0.56" rpy="0 0 0"/>
+        <parent link="base_link" />
+        <child link="front_plate_link" />
+    </joint>
+
+    <link name="rear_plate_link">
+        <visual>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <geometry>
+                <box size="0.4 0.3 0.01"/>
+            </geometry>
+            <material name="silver"/>
+        </visual>
+        <collision>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <geometry>
+                <box size="0.4 0.3 0.01"/>
+            </geometry>
+        </collision>
+    </link>
+
+    <joint name="rear_plate_joint" type="fixed">
+        <origin xyz="0 -0.66 0.59" rpy="${-PI/13} 0 0"/>
+        <parent link="base_link" />
+        <child link="rear_plate_link" />
+    </joint>
+
+</robot>
