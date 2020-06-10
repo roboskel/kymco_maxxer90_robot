@@ -86,7 +86,7 @@
     </link>
 
     <joint name="rear_axle_joint" type="fixed">
-        <origin xyz="0.03 ${0.33-wheelbase} ${distance_from_ground-wheel_diameter/2}" rpy="0 0 ${-PI/2}"/>
+        <origin xyz="0.03 ${0.33-wheelbase} ${distance_from_ground/2}" rpy="0 0 ${-PI/2}"/>
         <parent link="base_link" />
         <child link="rear_axle_link" />
     </joint>
@@ -108,7 +108,7 @@
     </link>
 
     <joint name="front_plate_joint" type="fixed">
-        <origin xyz="0 0.45 0.56" rpy="0 0 0"/>
+        <origin xyz="0 0.45 0.561" rpy="0 0 0"/>
         <parent link="base_link" />
         <child link="front_plate_link" />
     </joint>
@@ -133,6 +133,232 @@
         <origin xyz="0 -0.66 0.59" rpy="${-PI/13} 0 0"/>
         <parent link="base_link" />
         <child link="rear_plate_link" />
+    </joint>
+
+    <link name="rear_trans_chassis_link">
+        <visual>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <geometry>
+                <box size="0.12 0.01 0.01"/>
+            </geometry>
+            <material name="black"/>
+        </visual>
+        <collision>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <geometry>
+                <box size="0.12 0.01 0.01"/>
+            </geometry>
+        </collision>
+    </link>
+
+    <joint name="rear_trans_chassis_joint" type="fixed">
+        <origin xyz="0 -0.46 0.39" rpy="0 0 0"/>
+        <parent link="base_link" />
+        <child link="rear_trans_chassis_link" />
+    </joint>
+
+    <link name="rear_trans_link">
+        <visual>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <geometry>
+                <cylinder radius="0.02" length="0.28"/>
+            </geometry>
+            <material name="black"/>
+        </visual>
+        <collision>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <geometry>
+                <cylinder radius="0.02" length="0.28"/>
+            </geometry>
+        </collision>
+    </link>
+
+    <joint name="rear_trans_joint" type="fixed">
+        <origin xyz="0 -0.56 0.29" rpy="${-PI/4} 0 0"/>
+        <parent link="base_link" />
+        <child link="rear_trans_link" />
+    </joint>
+
+    <link name="rear_trans_spring_link">
+        <visual>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <geometry>
+                <mesh filename="package://kymco_maxxer90_description/meshes/spring.stl" scale="1.0 1.0 1.0"/>
+            </geometry>
+            <material name="red">
+                <color rgba="0.8 0 0 1"/>
+            </material>
+        </visual>
+        <collision>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <geometry>
+                <mesh filename="package://kymco_maxxer90_description/meshes/spring.stl" scale="1.0 1.0 1.0"/>
+            </geometry>
+        </collision>
+    </link>
+
+    <joint name="rear_trans_spring_joint" type="fixed">
+        <origin xyz="0 -0.56 0.29" rpy="${-PI/4} 0 0"/>
+        <parent link="base_link" />
+        <child link="rear_trans_spring_link" />
+    </joint>
+
+    <link name="front_right_trans_chassis_link">
+        <visual>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <geometry>
+                <box size="0.01 0.2 0.01"/>
+            </geometry>
+            <material name="black"/>
+        </visual>
+        <collision>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <geometry>
+                <box size="0.01 0.2 0.01"/>
+            </geometry>
+        </collision>
+    </link>
+
+    <joint name="front_right_trans_chassis_joint" type="fixed">
+        <origin xyz="0.075 0.33 0.4" rpy="0 0 0"/>
+        <parent link="base_link" />
+        <child link="front_right_trans_chassis_link" />
+    </joint>
+
+    <link name="front_right_trans_link">
+        <visual>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <geometry>
+                <cylinder radius="0.02" length="0.28"/>
+            </geometry>
+            <material name="black"/>
+        </visual>
+        <collision>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <geometry>
+                <cylinder radius="0.02" length="0.28"/>
+            </geometry>
+        </collision>
+    </link>
+
+    <joint name="front_right_trans_joint" type="fixed">
+        <origin xyz="0.15 0.33 0.29" rpy="${PI/10} ${-PI/5} 0"/>
+        <parent link="base_link" />
+        <child link="front_right_trans_link" />
+    </joint>
+
+    <link name="front_right_trans_spring_link">
+        <visual>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <geometry>
+                <mesh filename="package://kymco_maxxer90_description/meshes/spring.stl" scale="1.0 1.0 1.0"/>
+            </geometry>
+            <material name="red">
+                <color rgba="0.8 0 0 1"/>
+            </material>
+        </visual>
+        <collision>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <geometry>
+                <mesh filename="package://kymco_maxxer90_description/meshes/spring.stl" scale="1.0 1.0 1.0"/>
+            </geometry>
+        </collision>
+    </link>
+
+    <joint name="front_right_trans_spring_joint" type="fixed">
+        <origin xyz="0.15 0.33 0.29" rpy="${PI/10} ${-PI/5} 0"/>
+        <parent link="base_link" />
+        <child link="front_right_trans_spring_link" />
+    </joint>
+
+    <link name="front_left_trans_chassis_link">
+        <visual>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <geometry>
+                <box size="0.01 0.2 0.01"/>
+            </geometry>
+            <material name="black"/>
+        </visual>
+        <collision>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <geometry>
+                <box size="0.01 0.2 0.01"/>
+            </geometry>
+        </collision>
+    </link>
+
+    <joint name="front_left_trans_chassis_joint" type="fixed">
+        <origin xyz="-0.075 0.33 0.4" rpy="0 0 0"/>
+        <parent link="base_link" />
+        <child link="front_left_trans_chassis_link" />
+    </joint>
+
+    <link name="front_left_trans_link">
+        <visual>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <geometry>
+                <cylinder radius="0.02" length="0.28"/>
+            </geometry>
+            <material name="black"/>
+        </visual>
+        <collision>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <geometry>
+                <cylinder radius="0.02" length="0.28"/>
+            </geometry>
+        </collision>
+    </link>
+
+    <joint name="front_left_trans_joint" type="fixed">
+        <origin xyz="-0.15 0.33 0.29" rpy="${PI/10} ${PI/5} 0"/>
+        <parent link="base_link" />
+        <child link="front_left_trans_link" />
+    </joint>
+
+    <link name="front_left_trans_spring_link">
+        <visual>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <geometry>
+                <mesh filename="package://kymco_maxxer90_description/meshes/spring.stl" scale="1.0 1.0 1.0"/>
+            </geometry>
+            <material name="red">
+                <color rgba="0.8 0 0 1"/>
+            </material>
+        </visual>
+        <collision>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <geometry>
+                <mesh filename="package://kymco_maxxer90_description/meshes/spring.stl" scale="1.0 1.0 1.0"/>
+            </geometry>
+        </collision>
+    </link>
+
+    <joint name="front_left_trans_spring_joint" type="fixed">
+        <origin xyz="-0.15 0.33 0.29" rpy="${PI/10} ${PI/5} 0"/>
+        <parent link="base_link" />
+        <child link="front_left_trans_spring_link" />
+    </joint>
+
+    <link name="front_right_trans_link">
+        <visual>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <geometry>
+                <cylinder radius="0.02" length="0.28"/>
+            </geometry>
+            <material name="black"/>
+        </visual>
+        <collision>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <geometry>
+                <cylinder radius="0.02" length="0.28"/>
+            </geometry>
+        </collision>
+    </link>
+
+    <joint name="front_right_trans_joint" type="fixed">
+        <origin xyz="0.15 0.33 0.29" rpy="${PI/10} ${-PI/5} 0"/>
+        <parent link="base_link" />
+        <child link="front_right_trans_link" />
     </joint>
 
 </robot>
