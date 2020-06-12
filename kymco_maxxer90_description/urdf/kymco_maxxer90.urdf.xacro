@@ -11,6 +11,7 @@
     <xacro:property name="wheel_width" value="0.15"/>
     <xacro:property name="track" value="0.55"/>
 
+    <!-- Chassis -->
     <link name="base_link">
         <visual>
             <origin xyz="0 0 ${distance_from_ground}" rpy="0 0 0"/>
@@ -29,6 +30,7 @@
         </collision>
     </link>
 
+    <!-- Steering wheel -->
     <link name="steering_wheel_link"/>
 
     <joint name="steering_wheel_joint" type="revolute">
@@ -40,6 +42,17 @@
         <limit lower="${-PI*25/180}" upper="${PI*25/180}" effort="0.5" velocity="4.5"/>
     </joint>
 
+    <transmission name="steering_wheel_joint_trans">
+        <type>transmission_interface/SimpleTransmission</type>
+        <joint name="steering_wheel_joint">
+            <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+        </joint>
+        <actuator name="steering_wheel_actuator">
+            <mechanicalReduction>1</mechanicalReduction>
+        </actuator>
+    </transmission>
+
+    <!-- Engine -->
     <link name="engine_link">
         <visual>
             <origin xyz="0 0 0" rpy="0 0 0"/>
@@ -64,6 +77,7 @@
         <child link="engine_link" />
     </joint>
 
+    <!-- Wheels -->
     <xacro:kymco_maxxer90_front_wheel wheel_prefix="front_right">
         <origin xyz="${track/2} 0.33 ${distance_from_ground/2}" rpy="0 0 ${PI/2}"/>
     </xacro:kymco_maxxer90_front_wheel>

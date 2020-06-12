@@ -23,23 +23,37 @@
 			</collision>
 		</link>
 
-		<joint name="${wheel_prefix}_wheel" type="continuous">
-			<parent link="steering_wheel_link"/>
-			<child link="${wheel_prefix}_wheel_link"/>
-			<xacro:insert_block name="joint_pose"/>
-			<axis xyz="0 1 0" rpy="0 0 0" />
-		</joint>
+        <link name="${wheel_prefix}_wheel_steering_link" />
 
-        <!-- TODO plugins for ackermann steering-->
-        <!-- <transmission name="${wheel_prefix}_wheel_trans" type="SimpleTransmission"> -->
-            <!-- <type>transmission_interface/SimpleTransmission</type> -->
-            <!-- <actuator name="${wheel_prefix}_wheel_motor"> -->
-                <!-- <mechanicalReduction>1</mechanicalReduction> -->
-            <!-- </actuator> -->
-            <!-- <joint name="${wheel_prefix}_wheel"> -->
-                <!-- <hardwareInterface>VelocityJointInterface</hardwareInterface> -->
-            <!-- </joint> -->
-        <!-- </transmission> -->
+        <joint name="${wheel_prefix}_steering_wheel_joint" type="revolute">
+			<xacro:insert_block name="joint_pose"/>
+			<parent link="base_link"/>
+			<child link="${wheel_prefix}_wheel_steering_link"/>
+            <axis xyz="0 0 1" />
+            <mimic joint="steering_wheel_joint" multiplier="1" offset="0" />
+            <!-- TODO effort and velocity -->
+            <limit lower="${-PI*25/180}" upper="${PI*25/180}" effort="0.5" velocity="4.5"/>
+            <dynamics damping="0.02" friction="0.0" />
+        </joint>
+
+		<joint name="${wheel_prefix}_wheel" type="continuous">
+            <origin xyz="0 0 0" />
+            <parent link="${wheel_prefix}_wheel_steering_link" />
+			<child link="${wheel_prefix}_wheel_link"/>
+			<axis xyz="0 1 0" rpy="0 0 0" />
+        </joint>
+
+        <gazebo>
+            <plugin name="${wheel_prefix}_mimic_joint_plugin" filename="libroboticsgroup_gazebo_mimic_joint_plugin.so">
+                <joint>steering_wheel_joint</joint>
+                <mimicJoint>${wheel_prefix}_steering_wheel_joint</mimicJoint>
+                <hasPID/>
+                <multiplier>1.0</multiplier>
+                <offset>0</offset>
+                <sensitiveness></sensitiveness>
+                <maxEffort>10.0</maxEffort>
+            </plugin>
+        </gazebo>
 
 	</xacro:macro>
 </robot>
