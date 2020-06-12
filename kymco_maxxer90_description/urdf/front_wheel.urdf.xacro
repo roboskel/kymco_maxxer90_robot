@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<robot name="kymco_maxxer90_front_wheel" xmlns:xacro="http://ros.org/wiki/xacro">
+
+	<xacro:macro name="kymco_maxxer90_front_wheel" params="wheel_prefix *joint_pose">
+		<link name="${wheel_prefix}_wheel_link">
+			<inertial>
+				<mass value="5.0" />  <!-- TODO -->
+				<origin xyz="0 0 0" />
+				<inertia  ixx="0.02467" ixy="0" ixz="0" iyy="0.02467" iyz="0" izz="0.04411" />  <!-- TODO -->
+			</inertial>
+			<visual>
+				<origin xyz="0 0 0" rpy="0 0 0" />
+				<geometry>
+                    <mesh filename="package://kymco_maxxer90_description/meshes/wheel.stl" scale="1.0 1.0 1.0"/>
+				</geometry>
+				<material name="black"/>
+			</visual>
+			<collision>
+                <origin xyz="0 0 0" rpy="0 0 0" />
+				<geometry>
+                    <mesh filename="package://kymco_maxxer90_description/meshes/wheel.stl" scale="1.0 1.0 1.0"/>
+				</geometry>
+			</collision>
+		</link>
+
+		<joint name="${wheel_prefix}_wheel" type="continuous">
+			<parent link="steering_wheel_link"/>
+			<child link="${wheel_prefix}_wheel_link"/>
+			<xacro:insert_block name="joint_pose"/>
+			<axis xyz="0 1 0" rpy="0 0 0" />
+		</joint>
+
+        <!-- TODO plugins for ackermann steering-->
+        <!-- <transmission name="${wheel_prefix}_wheel_trans" type="SimpleTransmission"> -->
+            <!-- <type>transmission_interface/SimpleTransmission</type> -->
+            <!-- <actuator name="${wheel_prefix}_wheel_motor"> -->
+                <!-- <mechanicalReduction>1</mechanicalReduction> -->
+            <!-- </actuator> -->
+            <!-- <joint name="${wheel_prefix}_wheel"> -->
+                <!-- <hardwareInterface>VelocityJointInterface</hardwareInterface> -->
+            <!-- </joint> -->
+        <!-- </transmission> -->
+
+	</xacro:macro>
+</robot>

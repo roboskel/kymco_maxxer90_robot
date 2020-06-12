@@ -2,6 +2,7 @@
 <robot name="kymco_maxxer90" xmlns:xacro="http://ros.org/wiki/xacro"> 
 
     <xacro:include filename="$(find kymco_maxxer90_description)/urdf/wheel.urdf.xacro"/>
+    <xacro:include filename="$(find kymco_maxxer90_description)/urdf/front_wheel.urdf.xacro"/>
 
     <xacro:property name="PI" value="3.1415926535897931"/>
     <xacro:property name="distance_from_ground" value="0.35"/> <!-- TODO -->
@@ -28,6 +29,17 @@
         </collision>
     </link>
 
+    <link name="steering_wheel_link"/>
+
+    <joint name="steering_wheel_joint" type="revolute">
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <parent link="base_link" />
+        <child link="steering_wheel_link" />
+        <axis xyz="0 0 1" />
+        <!-- TODO effort and velocity -->
+        <limit lower="${-PI*25/180}" upper="${PI*25/180}" effort="0.5" velocity="4.5"/>
+    </joint>
+
     <link name="engine_link">
         <visual>
             <origin xyz="0 0 0" rpy="0 0 0"/>
@@ -52,13 +64,13 @@
         <child link="engine_link" />
     </joint>
 
-    <xacro:kymco_maxxer90_wheel wheel_prefix="front_right">
+    <xacro:kymco_maxxer90_front_wheel wheel_prefix="front_right">
         <origin xyz="${track/2} 0.33 ${distance_from_ground/2}" rpy="0 0 ${PI/2}"/>
-    </xacro:kymco_maxxer90_wheel>
+    </xacro:kymco_maxxer90_front_wheel>
 
-    <xacro:kymco_maxxer90_wheel wheel_prefix="front_left">
+    <xacro:kymco_maxxer90_front_wheel wheel_prefix="front_left">
         <origin xyz="${-track/2} 0.33 ${distance_from_ground/2}" rpy="0 0 ${-PI/2}"/>
-    </xacro:kymco_maxxer90_wheel>
+    </xacro:kymco_maxxer90_front_wheel>
 
     <xacro:kymco_maxxer90_wheel wheel_prefix="rear_left">
         <origin xyz="${-track/2} ${0.33-wheelbase} ${distance_from_ground/2}" rpy="0 0 ${-PI/2}"/>
@@ -337,28 +349,6 @@
         <origin xyz="-0.15 0.33 0.29" rpy="${PI/10} ${PI/5} 0"/>
         <parent link="base_link" />
         <child link="front_left_trans_spring_link" />
-    </joint>
-
-    <link name="front_right_trans_link">
-        <visual>
-            <origin xyz="0 0 0" rpy="0 0 0"/>
-            <geometry>
-                <cylinder radius="0.02" length="0.28"/>
-            </geometry>
-            <material name="black"/>
-        </visual>
-        <collision>
-            <origin xyz="0 0 0" rpy="0 0 0"/>
-            <geometry>
-                <cylinder radius="0.02" length="0.28"/>
-            </geometry>
-        </collision>
-    </link>
-
-    <joint name="front_right_trans_joint" type="fixed">
-        <origin xyz="0.15 0.33 0.29" rpy="${PI/10} ${-PI/5} 0"/>
-        <parent link="base_link" />
-        <child link="front_right_trans_link" />
     </joint>
 
 </robot>
