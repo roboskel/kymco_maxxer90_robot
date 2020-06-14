@@ -6,7 +6,6 @@
 
   <maintainer email="gstavrinos@iit.demokritos.gr">George Stavrinos</maintainer>
 
-
   <license>BSD</license>
 
   <buildtool_depend>catkin</buildtool_depend>

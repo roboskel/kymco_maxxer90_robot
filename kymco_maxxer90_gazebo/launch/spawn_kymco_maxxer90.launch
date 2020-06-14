@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+
+<launch>
+
+    <arg name="robot_name" default="kymco_maxxer90"/>
+    <arg name="x" default="0.5"/>
+    <arg name="y" default="0.5"/>
+    <arg name="z" default="4.0"/>
+    <arg name="yaw" default="0.0"/>
+
+
+    <include file="$(find kymco_maxxer90_description)/launch/description.launch"/>
+
+    <!-- <include file="$(find kymco_maxxer90_gazebo)/launch/multimaster_gazebo_kymco_maxxer90.launch"> -->
+        <!-- <arg name="gazebo_interface" value="$(find kymco_maxxer90_control)/config/gazebo_interface.yaml" /> -->
+    <!-- </include> -->
+
+    <!-- <rosparam command="load" file="$(find kymco_maxxer90_control)/config/control.yaml" /> -->
+    <!-- <include file="$(find kymco_maxxer90_control)/launch/control.launch"/> -->
+
+    <node name="ground_truth_to_tf" pkg="message_to_tf" type="message_to_tf" output="screen">
+        <param name="odometry_topic" value="odom/perfect" />
+        <param name="frame_id" value="odom" />
+    </node>
+
+    <!-- Spawn robot in gazebo -->
+    <node name="spawn_kymco_maxxer90_model" pkg="gazebo_ros" type="spawn_model"
+        args="-x $(arg x)
+              -y $(arg y)
+              -z $(arg z)
+              -Y $(arg yaw)
+              -urdf
+              -param robot_description
+              -model $(arg robot_name)" />
+
+</launch>
