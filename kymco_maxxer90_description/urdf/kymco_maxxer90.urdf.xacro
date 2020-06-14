@@ -13,6 +13,12 @@
 
     <!-- Chassis -->
     <link name="base_link">
+        <!-- TODO -->
+        <inertial>
+            <mass value="129"/>
+            <origin xyz="-0.08748 -0.00085 0.09947"/>
+            <inertia ixx="0.6022" ixy="-0.02364" ixz="-0.1197" iyy="1.7386" iyz="-0.001544" izz="2.0296"/>
+        </inertial>
         <visual>
             <origin xyz="0 0 ${distance_from_ground}" rpy="0 0 0"/>
             <geometry>
@@ -31,7 +37,14 @@
     </link>
 
     <!-- Steering wheel -->
-    <link name="steering_wheel_link"/>
+    <link name="steering_wheel_link">
+        <!-- TODO -->
+        <inertial>
+            <mass value="3.5"/>
+            <origin xyz="-0.08748 -0.00085 0.09947"/>
+            <inertia ixx="0.6022" ixy="-0.02364" ixz="-0.1197" iyy="1.7386" iyz="-0.001544" izz="2.0296"/>
+        </inertial>
+    </link>
 
     <joint name="steering_wheel_joint" type="revolute">
         <origin xyz="0 0 0" rpy="0 0 0" />
@@ -40,6 +53,7 @@
         <axis xyz="0 0 1" />
         <!-- TODO effort and velocity -->
         <limit lower="${-PI*25/180}" upper="${PI*25/180}" effort="0.5" velocity="4.5"/>
+        <dynamics damping="0.02" friction="0.0" />
     </joint>
 
     <transmission name="steering_wheel_joint_trans">
