@@ -12,12 +12,13 @@
     <xacro:property name="track" value="0.55"/>
 
     <!-- Chassis -->
-    <link name="base_link">
-        <!-- TODO -->
+    <link name="base_link" />
+
+    <link name="chassis_link"> 
         <inertial>
-            <mass value="129"/>
+            <mass value="68"/>
             <origin xyz="-0.08748 -0.00085 0.09947"/>
-            <inertia ixx="0.6022" ixy="-0.02364" ixz="-0.1197" iyy="1.7386" iyz="-0.001544" izz="2.0296"/>
+                <inertia  ixx="2.746671789898144" ixy="0" ixz="0" iyy="1.629571305145487" iyz="0" izz="1.930434142335272" />
         </inertial>
         <visual>
             <origin xyz="0 0 ${distance_from_ground}" rpy="0 0 0"/>
@@ -36,13 +37,22 @@
         </collision>
     </link>
 
+    <joint name="chassis_joint" type="fixed">
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <parent link="base_link" />"
+        <child link="chassis_link" />"
+    </joint>
+
+    <gazebo reference="chassis_link">
+        <material>Gazebo/Black</material>
+    </gazebo>"
+
     <!-- Steering wheel -->
     <link name="steering_wheel_link">
-        <!-- TODO -->
         <inertial>
-            <mass value="3.5"/>
+            <mass value="0.1"/>
             <origin xyz="-0.08748 -0.00085 0.09947"/>
-            <inertia ixx="0.6022" ixy="-0.02364" ixz="-0.1197" iyy="1.7386" iyz="-0.001544" izz="2.0296"/>
+            <inertia ixx="0.0000001" ixy="0" ixz="0" iyy="0.0000001" iyz="-0" izz="0.0000001"/>
         </inertial>
     </link>
 
@@ -91,6 +101,10 @@
         <child link="engine_link" />
     </joint>
 
+    <gazebo reference="engine_link">
+        <material>Gazebo/Grey</material>
+    </gazebo>"
+
     <!-- Wheels -->
     <xacro:kymco_maxxer90_front_wheel wheel_prefix="front_right">
         <origin xyz="${track/2} 0.33 ${distance_from_ground/2}" rpy="0 0 ${PI/2}"/>
@@ -131,6 +145,10 @@
         <child link="rear_axle_link" />
     </joint>
 
+    <gazebo reference="rear_axle_link">
+        <material>Gazebo/Grey</material>
+    </gazebo>"
+
     <link name="front_plate_link">
         <visual>
             <origin xyz="0 0 0" rpy="0 0 0"/>
@@ -152,6 +170,10 @@
         <parent link="base_link" />
         <child link="front_plate_link" />
     </joint>
+
+    <gazebo reference="front_plate_link">
+        <material>Gazebo/Grey</material>
+    </gazebo>"
 
     <link name="rear_plate_link">
         <visual>
@@ -175,6 +197,10 @@
         <child link="rear_plate_link" />
     </joint>
 
+    <gazebo reference="rear_plate_link">
+        <material>Gazebo/Grey</material>
+    </gazebo>"
+
     <link name="rear_trans_chassis_link">
         <visual>
             <origin xyz="0 0 0" rpy="0 0 0"/>
@@ -196,6 +222,10 @@
         <parent link="base_link" />
         <child link="rear_trans_chassis_link" />
     </joint>
+
+    <gazebo reference="rear_trans_chassis_link">
+        <material>Gazebo/Black</material>
+    </gazebo>"
 
     <link name="rear_trans_link">
         <visual>
@@ -219,6 +249,10 @@
         <child link="rear_trans_link" />
     </joint>
 
+    <gazebo reference="rear_trans_link">
+        <material>Gazebo/Black</material>
+    </gazebo>"
+
     <link name="rear_trans_spring_link">
         <visual>
             <origin xyz="0 0 0" rpy="0 0 0"/>
@@ -236,6 +270,10 @@
             </geometry>
         </collision>
     </link>
+
+    <gazebo reference="rear_trans_spring_link">
+        <material>Gazebo/Red</material>
+    </gazebo>"
 
     <joint name="rear_trans_spring_joint" type="fixed">
         <origin xyz="0 -0.56 0.29" rpy="${-PI/4} 0 0"/>
@@ -265,6 +303,10 @@
         <child link="front_right_trans_chassis_link" />
     </joint>
 
+    <gazebo reference="front_right_trans_chassis_link">
+        <material>Gazebo/Black</material>
+    </gazebo>"
+
     <link name="front_right_trans_link">
         <visual>
             <origin xyz="0 0 0" rpy="0 0 0"/>
@@ -286,6 +328,10 @@
         <parent link="base_link" />
         <child link="front_right_trans_link" />
     </joint>
+
+    <gazebo reference="front_right_trans_link">
+        <material>Gazebo/Black</material>
+    </gazebo>"
 
     <link name="front_right_trans_spring_link">
         <visual>
@@ -311,6 +357,10 @@
         <child link="front_right_trans_spring_link" />
     </joint>
 
+    <gazebo reference="front_right_trans_spring_link">
+        <material>Gazebo/Red</material>
+    </gazebo>"
+
     <link name="front_left_trans_chassis_link">
         <visual>
             <origin xyz="0 0 0" rpy="0 0 0"/>
@@ -333,6 +383,10 @@
         <child link="front_left_trans_chassis_link" />
     </joint>
 
+    <gazebo reference="front_left_trans_chassis_link">
+        <material>Gazebo/Black</material>
+    </gazebo>"
+
     <link name="front_left_trans_link">
         <visual>
             <origin xyz="0 0 0" rpy="0 0 0"/>
@@ -354,6 +408,10 @@
         <parent link="base_link" />
         <child link="front_left_trans_link" />
     </joint>
+
+    <gazebo reference="front_left_trans_link">
+        <material>Gazebo/Black</material>
+    </gazebo>"
 
     <link name="front_left_trans_spring_link">
         <visual>
@@ -378,5 +436,9 @@
         <parent link="base_link" />
         <child link="front_left_trans_spring_link" />
     </joint>
+
+    <gazebo reference="front_left_trans_spring_link">
+        <material>Gazebo/Red</material>
+    </gazebo>"
 
 </robot>

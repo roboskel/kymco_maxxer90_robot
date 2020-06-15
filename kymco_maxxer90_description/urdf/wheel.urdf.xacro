@@ -4,9 +4,9 @@
 	<xacro:macro name="kymco_maxxer90_wheel" params="wheel_prefix *joint_pose">
 		<link name="${wheel_prefix}_wheel_link">
 			<inertial>
-				<mass value="5.0" />  <!-- TODO -->
-				<origin xyz="0 0 0" />
-				<inertia  ixx="0.02467" ixy="0" ixz="0" iyy="0.02467" iyz="0" izz="0.04411" />  <!-- TODO -->
+				<mass value="15.0" />
+                <origin xyz="0 0 0" />
+                <inertia  ixx="0.28813432952881635" ixy="0" ixz="0" iyy="0.5212991167201597" iyz="0" izz="0.2894147916616918" />
 			</inertial>
 			<visual>
 				<origin xyz="0 0 0" rpy="0 0 0" />
@@ -29,6 +29,10 @@
 			<xacro:insert_block name="joint_pose"/>
 			<axis xyz="0 1 0" rpy="0 0 0" />
 		</joint>
+
+        <gazebo reference="${wheel_prefix}_wheel_link">
+            <material>Gazebo/Black</material>
+        </gazebo>"
 
         <transmission name="${wheel_prefix}_wheel_trans" type="SimpleTransmission">
             <type>transmission_interface/SimpleTransmission</type>

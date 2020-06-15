@@ -3,11 +3,10 @@
 
 	<xacro:macro name="kymco_maxxer90_front_wheel" params="wheel_prefix *joint_pose">
 		<link name="${wheel_prefix}_wheel_link">
-            <!-- TODO -->
             <inertial>
-                <mass value="33.455"/>
+                <mass value="15.0"/>
                 <origin xyz="-0.08748 -0.00085 0.09947"/>
-                <inertia ixx="0.6022" ixy="-0.02364" ixz="-0.1197" iyy="1.7386" iyz="-0.001544" izz="2.0296"/>
+                <inertia  ixx="0.28813432952881635" ixy="0" ixz="0" iyy="0.5212991167201597" iyz="0" izz="0.2894147916616918" />
             </inertial>
 			<visual>
 				<origin xyz="0 0 0" rpy="0 0 0" />
@@ -25,11 +24,10 @@
 		</link>
 
         <link name="${wheel_prefix}_wheel_steering_link" >
-            <!-- TODO -->
             <inertial>
-                <mass value="33.455"/>
+                <mass value="0.01"/>
                 <origin xyz="-0.08748 -0.00085 0.09947"/>
-                <inertia ixx="0.6022" ixy="-0.02364" ixz="-0.1197" iyy="1.7386" iyz="-0.001544" izz="2.0296"/>
+                <inertia ixx="0.0000001" ixy="0" ixz="0" iyy="0.0000001" iyz="0" izz="0.0000001"/>
             </inertial>
         </link>
 
@@ -50,6 +48,10 @@
 			<child link="${wheel_prefix}_wheel_link"/>
 			<axis xyz="0 1 0" rpy="0 0 0" />
         </joint>
+
+        <gazebo reference="${wheel_prefix}_wheel_link">
+            <material>Gazebo/Black</material>
+        </gazebo>"
 
         <gazebo>
             <plugin name="${wheel_prefix}_mimic_joint_plugin" filename="libroboticsgroup_gazebo_mimic_joint_plugin.so">
