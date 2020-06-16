@@ -15,11 +15,6 @@
     <link name="base_link" />
 
     <link name="chassis_link"> 
-        <inertial>
-            <mass value="68"/>
-            <origin xyz="-0.08748 -0.00085 0.09947"/>
-                <inertia  ixx="2.746671789898144" ixy="0" ixz="0" iyy="1.629571305145487" iyz="0" izz="1.930434142335272" />
-        </inertial>
         <visual>
             <origin xyz="0 0 ${distance_from_ground}" rpy="0 0 0"/>
             <geometry>
@@ -41,6 +36,20 @@
         <origin xyz="0 0 0" rpy="0 0 0" />
         <parent link="base_link" />"
         <child link="chassis_link" />"
+    </joint>
+
+    <link name="inertia_link">
+        <inertial>
+            <mass value="68"/>
+            <origin xyz="0 0.2 0.37"/>
+                <inertia  ixx="11.746671789898144" ixy="0" ixz="0" iyy="2.629571305145487" iyz="0" izz="10.930434142335272" />
+        </inertial>
+    </link>
+
+    <joint name="inertia_joint" type="fixed" >
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <parent link="base_link"/>
+        <child link="inertia_link"/>
     </joint>
 
     <gazebo reference="chassis_link">
@@ -87,12 +96,12 @@
                 <color rgba="0.3 0.3 0.3 1"/>
             </material>
         </visual>
-        <collision>
-            <origin xyz="0 0 0" rpy="0 0 0"/>
-            <geometry>
-                <mesh filename="package://kymco_maxxer90_description/meshes/engine.stl" scale="1.0 1.0 1.0"/>
-            </geometry>
-        </collision>
+        <!-- <collision> -->
+            <!-- <origin xyz="0 0 0" rpy="0 0 0"/> -->
+            <!-- <geometry> -->
+                <!-- <mesh filename="package://kymco_maxxer90_description/meshes/engine.stl" scale="1.0 1.0 1.0"/> -->
+            <!-- </geometry> -->
+        <!-- </collision> -->
     </link>
 
     <joint name="engine_joint" type="fixed">
@@ -106,21 +115,21 @@
     </gazebo>"
 
     <!-- Wheels -->
-    <xacro:kymco_maxxer90_front_wheel wheel_prefix="front_right">
-        <origin xyz="${track/2} 0.33 ${distance_from_ground/2}" rpy="0 0 ${PI/2}"/>
-    </xacro:kymco_maxxer90_front_wheel>
+    <!-- <xacro:kymco_maxxer90_front_wheel wheel_prefix="front_right"> -->
+        <!-- <origin xyz="${track/2} 0.33 ${distance_from_ground/2}" rpy="0 0 ${PI/2}"/> -->
+    <!-- </xacro:kymco_maxxer90_front_wheel> -->
 
-    <xacro:kymco_maxxer90_front_wheel wheel_prefix="front_left">
-        <origin xyz="${-track/2} 0.33 ${distance_from_ground/2}" rpy="0 0 ${-PI/2}"/>
-    </xacro:kymco_maxxer90_front_wheel>
+    <!-- <xacro:kymco_maxxer90_front_wheel wheel_prefix="front_left"> -->
+        <!-- <origin xyz="${-track/2} 0.33 ${distance_from_ground/2}" rpy="0 0 ${-PI/2}"/> -->
+    <!-- </xacro:kymco_maxxer90_front_wheel> -->
 
-    <xacro:kymco_maxxer90_wheel wheel_prefix="rear_left">
-        <origin xyz="${-track/2} ${0.33-wheelbase} ${distance_from_ground/2}" rpy="0 0 ${-PI/2}"/>
-    </xacro:kymco_maxxer90_wheel>
+    <!-- <xacro:kymco_maxxer90_wheel wheel_prefix="rear_left"> -->
+        <!-- <origin xyz="${-track/2} ${0.33-wheelbase} ${distance_from_ground/2}" rpy="0 0 ${-PI/2}"/> -->
+    <!-- </xacro:kymco_maxxer90_wheel> -->
 
-    <xacro:kymco_maxxer90_wheel wheel_prefix="rear_right">
-        <origin xyz="${track/2} ${0.33-wheelbase} ${distance_from_ground/2}" rpy="0 0 ${PI/2}"/>
-    </xacro:kymco_maxxer90_wheel>
+    <!-- <xacro:kymco_maxxer90_wheel wheel_prefix="rear_right"> -->
+        <!-- <origin xyz="${track/2} ${0.33-wheelbase} ${distance_from_ground/2}" rpy="0 0 ${PI/2}"/> -->
+    <!-- </xacro:kymco_maxxer90_wheel> -->
 
 
     <link name="rear_axle_link">
@@ -131,12 +140,12 @@
             </geometry>
             <material name="silver"/>
         </visual>
-        <collision>
-            <origin xyz="0 0 0" rpy="0 0 0"/>
-            <geometry>
-                <mesh filename="package://kymco_maxxer90_description/meshes/differential.stl" scale="1.0 1.0 1.0"/>
-            </geometry>
-        </collision>
+        <!-- <collision> -->
+            <!-- <origin xyz="0 0 0" rpy="0 0 0"/> -->
+            <!-- <geometry> -->
+                <!-- <mesh filename="package://kymco_maxxer90_description/meshes/differential.stl" scale="1.0 1.0 1.0"/> -->
+            <!-- </geometry> -->
+        <!-- </collision> -->
     </link>
 
     <joint name="rear_axle_joint" type="fixed">
@@ -157,12 +166,12 @@
             </geometry>
             <material name="silver"/>
         </visual>
-        <collision>
-            <origin xyz="0 0 0" rpy="0 0 0"/>
-            <geometry>
-                <box size="0.4 0.3 0.01"/>
-            </geometry>
-        </collision>
+        <!-- <collision> -->
+            <!-- <origin xyz="0 0 0" rpy="0 0 0"/> -->
+            <!-- <geometry> -->
+                <!-- <box size="0.4 0.3 0.01"/> -->
+            <!-- </geometry> -->
+        <!-- </collision> -->
     </link>
 
     <joint name="front_plate_joint" type="fixed">
@@ -183,12 +192,12 @@
             </geometry>
             <material name="silver"/>
         </visual>
-        <collision>
-            <origin xyz="0 0 0" rpy="0 0 0"/>
-            <geometry>
-                <box size="0.4 0.3 0.01"/>
-            </geometry>
-        </collision>
+        <!-- <collision> -->
+            <!-- <origin xyz="0 0 0" rpy="0 0 0"/> -->
+            <!-- <geometry> -->
+                <!-- <box size="0.4 0.3 0.01"/> -->
+            <!-- </geometry> -->
+        <!-- </collision> -->
     </link>
 
     <joint name="rear_plate_joint" type="fixed">
@@ -209,12 +218,12 @@
             </geometry>
             <material name="black"/>
         </visual>
-        <collision>
-            <origin xyz="0 0 0" rpy="0 0 0"/>
-            <geometry>
-                <box size="0.12 0.01 0.01"/>
-            </geometry>
-        </collision>
+        <!-- <collision> -->
+            <!-- <origin xyz="0 0 0" rpy="0 0 0"/> -->
+            <!-- <geometry> -->
+                <!-- <box size="0.12 0.01 0.01"/> -->
+            <!-- </geometry> -->
+        <!-- </collision> -->
     </link>
 
     <joint name="rear_trans_chassis_joint" type="fixed">
@@ -235,12 +244,12 @@
             </geometry>
             <material name="black"/>
         </visual>
-        <collision>
-            <origin xyz="0 0 0" rpy="0 0 0"/>
-            <geometry>
-                <cylinder radius="0.02" length="0.28"/>
-            </geometry>
-        </collision>
+        <!-- <collision> -->
+            <!-- <origin xyz="0 0 0" rpy="0 0 0"/> -->
+            <!-- <geometry> -->
+                <!-- <cylinder radius="0.02" length="0.28"/> -->
+            <!-- </geometry> -->
+        <!-- </collision> -->
     </link>
 
     <joint name="rear_trans_joint" type="fixed">
@@ -263,12 +272,12 @@
                 <color rgba="0.8 0 0 1"/>
             </material>
         </visual>
-        <collision>
-            <origin xyz="0 0 0" rpy="0 0 0"/>
-            <geometry>
-                <mesh filename="package://kymco_maxxer90_description/meshes/spring.stl" scale="1.0 1.0 1.0"/>
-            </geometry>
-        </collision>
+        <!-- <collision> -->
+            <!-- <origin xyz="0 0 0" rpy="0 0 0"/> -->
+            <!-- <geometry> -->
+                <!-- <mesh filename="package://kymco_maxxer90_description/meshes/spring.stl" scale="1.0 1.0 1.0"/> -->
+            <!-- </geometry> -->
+        <!-- </collision> -->
     </link>
 
     <gazebo reference="rear_trans_spring_link">
@@ -289,12 +298,12 @@
             </geometry>
             <material name="black"/>
         </visual>
-        <collision>
-            <origin xyz="0 0 0" rpy="0 0 0"/>
-            <geometry>
-                <box size="0.01 0.2 0.01"/>
-            </geometry>
-        </collision>
+        <!-- <collision> -->
+            <!-- <origin xyz="0 0 0" rpy="0 0 0"/> -->
+            <!-- <geometry> -->
+                <!-- <box size="0.01 0.2 0.01"/> -->
+            <!-- </geometry> -->
+        <!-- </collision> -->
     </link>
 
     <joint name="front_right_trans_chassis_joint" type="fixed">
@@ -315,12 +324,12 @@
             </geometry>
             <material name="black"/>
         </visual>
-        <collision>
-            <origin xyz="0 0 0" rpy="0 0 0"/>
-            <geometry>
-                <cylinder radius="0.02" length="0.28"/>
-            </geometry>
-        </collision>
+        <!-- <collision> -->
+            <!-- <origin xyz="0 0 0" rpy="0 0 0"/> -->
+            <!-- <geometry> -->
+                <!-- <cylinder radius="0.02" length="0.28"/> -->
+            <!-- </geometry> -->
+        <!-- </collision> -->
     </link>
 
     <joint name="front_right_trans_joint" type="fixed">
@@ -343,12 +352,12 @@
                 <color rgba="0.8 0 0 1"/>
             </material>
         </visual>
-        <collision>
-            <origin xyz="0 0 0" rpy="0 0 0"/>
-            <geometry>
-                <mesh filename="package://kymco_maxxer90_description/meshes/spring.stl" scale="1.0 1.0 1.0"/>
-            </geometry>
-        </collision>
+        <!-- <collision> -->
+            <!-- <origin xyz="0 0 0" rpy="0 0 0"/> -->
+            <!-- <geometry> -->
+                <!-- <mesh filename="package://kymco_maxxer90_description/meshes/spring.stl" scale="1.0 1.0 1.0"/> -->
+            <!-- </geometry> -->
+        <!-- </collision> -->
     </link>
 
     <joint name="front_right_trans_spring_joint" type="fixed">
@@ -369,12 +378,12 @@
             </geometry>
             <material name="black"/>
         </visual>
-        <collision>
-            <origin xyz="0 0 0" rpy="0 0 0"/>
-            <geometry>
-                <box size="0.01 0.2 0.01"/>
-            </geometry>
-        </collision>
+        <!-- <collision> -->
+            <!-- <origin xyz="0 0 0" rpy="0 0 0"/> -->
+            <!-- <geometry> -->
+                <!-- <box size="0.01 0.2 0.01"/> -->
+            <!-- </geometry> -->
+        <!-- </collision> -->
     </link>
 
     <joint name="front_left_trans_chassis_joint" type="fixed">
@@ -395,12 +404,12 @@
             </geometry>
             <material name="black"/>
         </visual>
-        <collision>
-            <origin xyz="0 0 0" rpy="0 0 0"/>
-            <geometry>
-                <cylinder radius="0.02" length="0.28"/>
-            </geometry>
-        </collision>
+        <!-- <collision> -->
+            <!-- <origin xyz="0 0 0" rpy="0 0 0"/> -->
+            <!-- <geometry> -->
+                <!-- <cylinder radius="0.02" length="0.28"/> -->
+            <!-- </geometry> -->
+        <!-- </collision> -->
     </link>
 
     <joint name="front_left_trans_joint" type="fixed">
@@ -423,12 +432,12 @@
                 <color rgba="0.8 0 0 1"/>
             </material>
         </visual>
-        <collision>
-            <origin xyz="0 0 0" rpy="0 0 0"/>
-            <geometry>
-                <mesh filename="package://kymco_maxxer90_description/meshes/spring.stl" scale="1.0 1.0 1.0"/>
-            </geometry>
-        </collision>
+        <!-- <collision> -->
+            <!-- <origin xyz="0 0 0" rpy="0 0 0"/> -->
+            <!-- <geometry> -->
+                <!-- <mesh filename="package://kymco_maxxer90_description/meshes/spring.stl" scale="1.0 1.0 1.0"/> -->
+            <!-- </geometry> -->
+        <!-- </collision> -->
     </link>
 
     <joint name="front_left_trans_spring_joint" type="fixed">
