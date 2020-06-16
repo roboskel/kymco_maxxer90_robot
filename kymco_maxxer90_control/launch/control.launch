@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+
+<launch>
+
+    <node name="base_controller_spawner" pkg="controller_manager" type="spawner" args="kymco_maxxer90_joint_publisher kymco_maxxer90_ackermann_controller --shutdown-timeout 3" output="screen"/>
+
+</launch>
