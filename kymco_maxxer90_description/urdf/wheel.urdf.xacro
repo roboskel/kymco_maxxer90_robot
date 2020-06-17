@@ -24,7 +24,7 @@
 		</link>
 
 		<joint name="${wheel_prefix}_wheel" type="continuous">
-			<parent link="base_link"/>
+			<parent link="RWD"/>
 			<child link="${wheel_prefix}_wheel_link"/>
 			<xacro:insert_block name="joint_pose"/>
 			<axis xyz="0 1 0" rpy="0 0 0" />
@@ -40,7 +40,7 @@
                 <mechanicalReduction>1</mechanicalReduction>
             </actuator>
             <joint name="${wheel_prefix}_wheel">
-                <hardwareInterface>VelocityJointInterface</hardwareInterface>
+                <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
             </joint>
         </transmission>
 

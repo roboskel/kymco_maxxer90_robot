@@ -5,7 +5,7 @@
 		<link name="${wheel_prefix}_wheel_link">
             <inertial>
                 <mass value="15.0"/>
-                <origin xyz="-0.08748 -0.00085 0.09947"/>
+                <origin xyz="0 0 0"/>
                 <inertia  ixx="0.28813432952881635" ixy="0" ixz="0" iyy="0.5212991167201597" iyz="0" izz="0.2894147916616918" />
             </inertial>
 			<visual>
@@ -25,9 +25,9 @@
 
         <link name="${wheel_prefix}_wheel_steering_link" >
             <inertial>
-                <mass value="0.01"/>
-                <origin xyz="-0.08748 -0.00085 0.09947"/>
-                <inertia ixx="0.0000001" ixy="0" ixz="0" iyy="0.0000001" iyz="0" izz="0.0000001"/>
+                <mass value="1"/>
+                <origin xyz="0 0 0"/>
+                <inertia ixx="0.01" ixy="0" ixz="0" iyy="0.01" iyz="0" izz="0.01"/>
             </inertial>
         </link>
 
@@ -38,12 +38,12 @@
             <axis xyz="0 0 1" />
             <mimic joint="steering_wheel_joint" multiplier="1" offset="0" />
             <!-- TODO effort and velocity -->
-            <limit lower="${-PI*25/180}" upper="${PI*25/180}" effort="0.5" velocity="4.5"/>
-            <dynamics damping="0.02" friction="0.0" />
+            <limit lower="${-PI*25/180}" upper="${PI*25/180}" effort="100.5" velocity="4.5"/>
+            <dynamics damping="0.2" friction="0" />
         </joint>
 
 		<joint name="${wheel_prefix}_wheel" type="continuous">
-            <origin xyz="0 0 0" />
+            <origin xyz="0 0 0" rpy="0 0 0"/>
             <parent link="${wheel_prefix}_wheel_steering_link" />
 			<child link="${wheel_prefix}_wheel_link"/>
 			<axis xyz="0 1 0" rpy="0 0 0" />
@@ -60,10 +60,30 @@
                 <hasPID/>
                 <multiplier>1.0</multiplier>
                 <offset>0</offset>
-                <sensitiveness></sensitiveness>
+                <sensitiveness>0.0</sensitiveness>
                 <maxEffort>10.0</maxEffort>
             </plugin>
         </gazebo>
+
+        <!-- <transmission name="${wheel_prefix}_wheel_steering_joint_trans"> -->
+            <!-- <type>transmission_interface/SimpleTransmission</type> -->
+            <!-- <joint name="${wheel_prefix}_steering_wheel_joint"> -->
+                <!-- <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface> -->
+            <!-- </joint> -->
+            <!-- <actuator name="${wheel_prefix}_steering_wheel_actuator"> -->
+                <!-- <mechanicalReduction>1</mechanicalReduction> -->
+            <!-- </actuator> -->
+        <!-- </transmission> -->
+
+        <!-- <transmission name="${wheel_prefix}_wheel_trans" type="SimpleTransmission"> -->
+            <!-- <type>transmission_interface/SimpleTransmission</type> -->
+            <!-- <actuator name="${wheel_prefix}_wheel_motor"> -->
+                <!-- <mechanicalReduction>0</mechanicalReduction> -->
+            <!-- </actuator> -->
+            <!-- <joint name="${wheel_prefix}_wheel"> -->
+                <!-- <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface> -->
+            <!-- </joint> -->
+        <!-- </transmission> -->
 
 	</xacro:macro>
 </robot>
