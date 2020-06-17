@@ -4,15 +4,14 @@ kymco_maxxer90_joint_publisher:
 
 kymco_maxxer90_ackermann_steering_controller:
     type: "ackermann_steering_controller/AckermannSteeringController"
-    # TODO I most definitely need a common joint
-    rear_wheel: "rear_left_wheel"
+    rear_wheel: "RWD_joint"
     front_steer: "steering_wheel_joint"
     publish_rate: 50
     pose_covariance_diagonal: [0.001, 0.001, 1000000.0, 1000000.0, 1000000.0, 1000.0]
     twist_covariance_diagonal: [0.001, 0.001, 1000000.0, 1000000.0, 1000000.0, 1000.0]
     cmd_vel_timeout: 0.5
     # wheel_separation_h : 0.4
-    # wheel_radius : 0.11
+    wheel_radius : 0.4572
     wheel_separation_h_multiplier: 1.0
     steer_pos_multiplier: 1.0
     base_frame_id: base_link
@@ -38,10 +37,12 @@ kymco_maxxer90_ackermann_steering_controller:
             # has_jerk_limits        : true
             # max_jerk               : 2.5 # rad/s^3
 
-kymco_maxxer90_ackermann_steering_sim_controller:
-    rear_wheel: "rear_wheel_common_joint"
-    front_steer: "steering_wheel_joint"
-
-    # wheel_separation_h: 0.2
-
-
+gazebo_ros_control:
+  pid_gains:
+    steering_wheel_joint:
+      p: 20.0
+      i: 0.1
+      d: 0.0
+      i_clamp: 0.2
+      antiwindup: false
+      publish_state: true
