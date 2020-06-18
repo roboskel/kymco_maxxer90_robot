@@ -38,11 +38,19 @@ kymco_maxxer90_ackermann_steering_controller:
             # max_jerk               : 2.5 # rad/s^3
 
 gazebo_ros_control:
-  pid_gains:
-    steering_wheel_joint:
-      p: 20.0
-      i: 0.1
-      d: 0.0
-      i_clamp: 0.2
-      antiwindup: false
-      publish_state: true
+    pid_gains:
+        front_left_steering_wheel_joint:
+            p: 50.0
+            i: 0.5
+            d: 0.3
+            # i_clamp: 0.2
+            # antiwindup: false
+            # publish_state: true
+        front_right_steering_wheel_joint:
+            p: 50.0
+            i: 0.5
+            d: 0.3
+            # i_clamp: 0.2
+            # antiwindup: false
+            # publish_state: true
+

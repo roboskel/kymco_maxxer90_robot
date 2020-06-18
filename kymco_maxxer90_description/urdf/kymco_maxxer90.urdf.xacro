@@ -72,7 +72,7 @@
         <axis xyz="0 0 1" />
         <!-- TODO effort and velocity -->
         <limit lower="${-PI*25/180}" upper="${PI*25/180}" effort="100.5" velocity="4.5"/>
-        <dynamics damping="20" friction="2.0" />
+        <dynamics damping="3" friction="0.0" />
     </joint>
 
     <transmission name="steering_wheel_joint_trans">
@@ -160,7 +160,7 @@
 
     <link name="RWD">
         <inertial>
-            <mass value="1"/>
+            <mass value="5"/>
             <origin xyz="0 0 0"/>
             <inertia ixx="0.01" ixy="0" ixz="0" iyy="0.01" iyz="0" izz="0.01"/>
         </inertial>
