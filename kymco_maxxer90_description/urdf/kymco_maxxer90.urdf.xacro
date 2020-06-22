@@ -132,6 +132,30 @@
     </xacro:kymco_maxxer90_wheel>
 
 
+    <link name="rear_suspension_link" >
+        <inertial>
+            <mass value="1"/>
+            <origin xyz="0 0 0"/>
+            <inertia ixx="0.01" ixy="0" ixz="0" iyy="0.01" iyz="0" izz="0.01"/>
+        </inertial>
+    </link>
+
+    <joint name="rear_suspension_joint" type="prismatic">
+        <origin xyz="0 ${0.33-wheelbase} ${distance_from_ground/2}" rpy="0 0 0" /> 
+        <parent link="base_link"/>
+        <child link="rear_suspension_link"/>
+        <axis xyz="0 0 -1" />
+        <limit lower="-0.1" upper="0.1" effort="500" velocity="10"/>
+        <!-- <dynamics damping="1" friction="0.2"/> -->
+    </joint>
+
+    <gazebo reference="rear_suspension_joint">
+        <provideFeedback>true</provideFeedback>
+        <implicitSpringDamper>true</implicitSpringDamper>
+        <springStiffness>30000</springStiffness>
+        <springReference>0</springReference>
+    </gazebo>
+
     <link name="rear_axle_link">
         <visual>
             <origin xyz="0 0 0" rpy="0 0 0"/>
@@ -149,8 +173,8 @@
     </link>
 
     <joint name="rear_axle_joint" type="fixed">
-        <origin xyz="0.03 ${0.33-wheelbase} ${distance_from_ground/2}" rpy="0 0 ${-PI/2}"/>
-        <parent link="base_link" />
+        <origin xyz="0.03 0 0" rpy="0 0 ${-PI/2}"/>
+        <parent link="rear_suspension_link" />
         <child link="rear_axle_link" />
     </joint>
 
@@ -160,15 +184,15 @@
 
     <link name="RWD">
         <inertial>
-            <mass value="5"/>
+            <mass value="1"/>
             <origin xyz="0 0 0"/>
             <inertia ixx="0.01" ixy="0" ixz="0" iyy="0.01" iyz="0" izz="0.01"/>
         </inertial>
     </link>
 
     <joint name="RWD_joint" type="continuous">
-        <origin xyz="0 ${0.33-wheelbase} ${distance_from_ground/2}" rpy="0 0 0"/>
-        <parent link="base_link" />
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <parent link="rear_suspension_link" />
         <child link="RWD" />
         <axis xyz="-1 0 0" />
     </joint>
