@@ -31,9 +31,33 @@
             </inertial>
         </link>
 
-        <joint name="${wheel_prefix}_steering_wheel_joint" type="revolute">
+        <link name="${wheel_prefix}_suspension_link" >
+            <inertial>
+                <mass value="1"/>
+                <origin xyz="0 0 0"/>
+                <inertia ixx="0.01" ixy="0" ixz="0" iyy="0.01" iyz="0" izz="0.01"/>
+            </inertial>
+        </link>
+
+        <joint name="${wheel_prefix}_suspension_joint" type="prismatic">
 			<xacro:insert_block name="joint_pose"/>
-			<parent link="base_link"/>
+            <parent link="base_link"/>
+            <child link="${wheel_prefix}_suspension_link"/>
+            <axis xyz="0 0 -1" />
+            <limit lower="-0.1" upper="0.1" effort="500" velocity="10"/>
+            <!-- <dynamics damping="1" friction="0.2"/> -->
+        </joint>
+
+        <gazebo reference="${wheel_prefix}_suspension_joint">
+            <provideFeedback>true</provideFeedback>
+            <implicitSpringDamper>true</implicitSpringDamper>
+            <springStiffness>30000</springStiffness>
+            <springReference>0</springReference>
+        </gazebo>
+    
+        <joint name="${wheel_prefix}_steering_wheel_joint" type="revolute">
+            <origin xyz="0 0 0" rpy="0 0 0" /> 
+            <parent link="${wheel_prefix}_suspension_link"/>
 			<child link="${wheel_prefix}_wheel_steering_link"/>
             <axis xyz="0 0 1" />
             <mimic joint="steering_wheel_joint" multiplier="1" offset="0" />
