@@ -156,6 +156,16 @@
         <springReference>0</springReference>
     </gazebo>
 
+    <transmission name="rear_suspension_trans" type="SimpleTransmission">
+        <type>transmission_interface/SimpleTransmission</type>
+        <actuator name="rear_suspension_actuator">
+            <mechanicalReduction>1</mechanicalReduction>
+        </actuator>
+        <joint name="rear_suspension_joint">
+            <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+        </joint>
+    </transmission>
+
     <link name="rear_axle_link">
         <visual>
             <origin xyz="0 0 0" rpy="0 0 0"/>

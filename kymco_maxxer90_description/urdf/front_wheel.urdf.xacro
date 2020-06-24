@@ -54,6 +54,16 @@
             <springStiffness>30000</springStiffness>
             <springReference>0</springReference>
         </gazebo>
+
+        <transmission name="${wheel_prefix}_suspension_trans" type="SimpleTransmission">
+        <type>transmission_interface/SimpleTransmission</type>
+        <actuator name="${wheel_prefix}_suspension_actuator">
+            <mechanicalReduction>1</mechanicalReduction>
+        </actuator>
+        <joint name="${wheel_prefix}_suspension_joint">
+            <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+        </joint>
+    </transmission>
     
         <joint name="${wheel_prefix}_steering_wheel_joint" type="revolute">
             <origin xyz="0 0 0" rpy="0 0 0" /> 
@@ -77,6 +87,16 @@
             <material>Gazebo/Black</material>
         </gazebo>"
 
+        <transmission name="${wheel_prefix}_wheel_trans" type="SimpleTransmission">
+        <type>transmission_interface/SimpleTransmission</type>
+        <actuator name="${wheel_prefix}_wheel_actuator">
+            <mechanicalReduction>0</mechanicalReduction>
+        </actuator>
+        <joint name="${wheel_prefix}_wheel">
+            <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+        </joint>
+    </transmission>
+
         <gazebo>
             <plugin name="${wheel_prefix}_mimic_joint_plugin" filename="libroboticsgroup_gazebo_mimic_joint_plugin.so">
                 <joint>steering_wheel_joint</joint>
@@ -88,26 +108,6 @@
                 <maxEffort>100000.0</maxEffort>
             </plugin>
         </gazebo>
-
-        <!-- <transmission name="${wheel_prefix}_wheel_steering_joint_trans"> -->
-            <!-- <type>transmission_interface/SimpleTransmission</type> -->
-            <!-- <joint name="${wheel_prefix}_steering_wheel_joint"> -->
-                <!-- <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface> -->
-            <!-- </joint> -->
-            <!-- <actuator name="${wheel_prefix}_steering_wheel_actuator"> -->
-                <!-- <mechanicalReduction>1</mechanicalReduction> -->
-            <!-- </actuator> -->
-        <!-- </transmission> -->
-
-        <!-- <transmission name="${wheel_prefix}_wheel_trans" type="SimpleTransmission"> -->
-            <!-- <type>transmission_interface/SimpleTransmission</type> -->
-            <!-- <actuator name="${wheel_prefix}_wheel_motor"> -->
-                <!-- <mechanicalReduction>0</mechanicalReduction> -->
-            <!-- </actuator> -->
-            <!-- <joint name="${wheel_prefix}_wheel"> -->
-                <!-- <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface> -->
-            <!-- </joint> -->
-        <!-- </transmission> -->
 
 	</xacro:macro>
 </robot>
