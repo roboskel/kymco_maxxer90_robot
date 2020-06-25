@@ -11,7 +11,7 @@ kymco_maxxer90_ackermann_steering_controller:
     twist_covariance_diagonal: [0.001, 0.001, 1000000.0, 1000000.0, 1000000.0, 1000.0]
     cmd_vel_timeout: 0.5
     # wheel_separation_h : 0.4
-    wheel_radius : 0.4572
+    wheel_radius : 0.2286
     wheel_separation_h_multiplier: 1.0
     steer_pos_multiplier: 1.0
     base_frame_id: base_link
