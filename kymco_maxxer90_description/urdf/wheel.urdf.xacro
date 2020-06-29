@@ -4,21 +4,23 @@
 	<xacro:macro name="kymco_maxxer90_wheel" params="wheel_prefix *joint_pose">
 		<link name="${wheel_prefix}_wheel_link">
 			<inertial>
-				<mass value="15.0" />
+				<mass value="10.0" />
                 <origin xyz="0 0 0" />
-                <inertia  ixx="0.28813432952881635" ixy="0" ixz="0" iyy="0.5212991167201597" iyz="0" izz="0.2894147916616918" />
+                <inertia  ixx="0.1494" ixy="0" ixz="0" iyy="0.2613" iyz="0" izz="0.1494" />
 			</inertial>
 			<visual>
-				<origin xyz="0 0 0" rpy="0 0 0" />
+                <origin xyz="0 0 0" rpy="0 0 0" />
 				<geometry>
                     <mesh filename="package://kymco_maxxer90_description/meshes/wheel.stl" scale="1.0 1.0 1.0"/>
 				</geometry>
 				<material name="black"/>
 			</visual>
 			<collision>
-                <origin xyz="0 0 0" rpy="0 0 0" />
+                <!-- <origin xyz="0 0 0" rpy="0 0 0" /> -->
+                <origin xyz="0 0 0" rpy="${PI/2} 0 0" />
 				<geometry>
-                    <mesh filename="package://kymco_maxxer90_description/meshes/wheel.stl" scale="1.0 1.0 1.0"/>
+                    <!-- <mesh filename="package://kymco_maxxer90_description/meshes/wheel.stl" scale="1.0 1.0 1.0"/> -->
+                    <cylinder radius="0.2286" length="0.15" />
 				</geometry>
 			</collision>
 		</link>
