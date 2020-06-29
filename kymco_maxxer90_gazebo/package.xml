@@ -10,6 +10,7 @@
 
   <buildtool_depend>catkin</buildtool_depend>
   <exec_depend>roboticsgroup_gazebo_plugins</exec_depend>
+  <exec_depend>hector_gazebo_plugins</exec_depend>
   <exec_depend>message_to_tf</exec_depend>
 
 </package>
