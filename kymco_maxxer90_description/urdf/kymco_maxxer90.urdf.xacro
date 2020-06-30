@@ -525,6 +525,63 @@
         <child link="imu_link"/>
     </joint>
 
+    <link name="rgbd_optical_camera_frame"/>
+
+    <joint name="rgbd_optical_camera_joint" type="fixed">
+        <origin xyz="0.0 0.5 0.4" rpy="0 0 ${PI/2}"/>
+        <parent link="base_link"/>
+        <child link="rgbd_optical_camera_frame"/>
+    </joint>
+
+    <link name="rgbd_depth_camera_frame"/>
+
+    <joint name="rgbd_depth_camera_joint" type="fixed">
+        <origin xyz="0.0 0 0" rpy="${-PI/2} 0 ${-PI/2}"/>
+        <parent link="rgbd_optical_camera_frame"/>
+        <child link="rgbd_depth_camera_frame"/>
+    </joint>
+
+    <gazebo reference="rgbd_optical_camera_frame">
+        <sensor type="depth" name="camera">
+            <always_on>true</always_on>
+            <update_rate>30.0</update_rate>
+            <camera>
+                <horizontal_fov>${110.0*PI/180.0}</horizontal_fov>
+                <image>
+                    <format>R8G8B8</format>
+                    <width>720</width>
+                    <height>540</height>
+                </image>
+                <clip>
+                    <near>0.2</near>
+                    <far>10.0</far>
+                </clip>
+            </camera>
+            <plugin name="camera_plugin" filename="libgazebo_ros_openni_kinect.so">
+                <baseline>0.2</baseline>
+                <alwaysOn>true</alwaysOn>
+                <!-- <cameraName>camera_ir</cameraName> -->
+                <imageTopicName>/camera/color/image_raw</imageTopicName>
+                <cameraInfoTopicName>/camera/color/camera_info</cameraInfoTopicName>
+                <depthImageTopicName>/camera/depth/image_raw</depthImageTopicName>
+                <depthImageCameraInfoTopicName>/camera/depth/camera_info</depthImageCameraInfoTopicName>
+                <pointCloudTopicName>/camera/depth/points</pointCloudTopicName>
+                <frameName>rgbd_depth_camera_frame</frameName>
+                <pointCloudCutoff>0.2</pointCloudCutoff>
+                <pointCloudCutoffMax>10.0</pointCloudCutoffMax>
+                <distortionK1>-0.16</distortionK1>
+                <distortionK2>0.01</distortionK2>
+                <distortionK3>-0.02</distortionK3>
+                <distortionT1>0.004</distortionT1>
+                <distortionT2>-0.01</distortionT2>
+                <CxPrime>0</CxPrime>
+                <Cx>0</Cx>
+                <Cy>0</Cy>
+                <focalLength>0</focalLength>
+                <hackBaseline>0</hackBaseline>
+            </plugin>
+        </sensor>
+    </gazebo>
 
 
     <!-- Gazebo plugins -->
