@@ -1,8 +1,0 @@
-<?xml version="1.0"?>
-<launch>
-
-<arg name="camera" default="/camera/color"/>
-
-<node ns="$(arg camera)" pkg="image_proc" type="image_proc" name="image_proc" />
-
-</launch>

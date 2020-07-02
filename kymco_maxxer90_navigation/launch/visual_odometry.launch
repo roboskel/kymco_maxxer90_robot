@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<launch>
+
+<arg name="camera" default="/camera/color"/>
+
+<node ns="$(arg camera)" pkg="image_proc" type="image_proc" name="image_proc" />
+
+<node pkg="viso2_ros" type="mono_odometer" name="mono_odometer">
+    <remap from="image" to="$(arg camera)/image_rect"/>
+
+    <param name="base_link_frame_id" value="rgbd_optical_camera_frame" />
+
+    <param name="camera_height" value="1.00" />
+    <param name="camera_pitch"  value="0.00" />
+</node>
+
+</launch>
