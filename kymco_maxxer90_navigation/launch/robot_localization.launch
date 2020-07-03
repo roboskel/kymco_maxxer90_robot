@@ -1,12 +1,25 @@
 <?xml version="1.0"?>
 <launch>
 
-    <include file="$(find kymco_maxxer90_navigation)/launch/gps_odometry.launch"/>
-
     <!-- <include file="$(find kymco_maxxer90_navigation)/launch/visual_odometry.launch"/> -->
 
     <node pkg="robot_localization" type="ekf_localization_node" name="ekf_localization">
         <rosparam command="load" file="$(find kymco_maxxer90_navigation)/config/ekf_localization.yaml" />
+    </node>
+
+    <!-- https://answers.ros.org/question/200071/how-to-fuse-imu-gps-using-robot_localization/ -->
+    <node pkg="robot_localization" type="navsat_transform_node" name="navsat_transform_node">
+
+        <!-- Not needed, but used as a placeholder -->
+        <remap from="imu/data" to="imu/data" />
+        <remap from="odometry/filtered" to="odometry/filtered" />
+
+
+        <remap from="gps/fix" to="navsat/fix" />
+
+        <param name="yaw_offset" value="1.5707963" />
+        <param name="magnetic_declination_radians" value="0.08342674" />
+
     </node>
 
 </launch>
