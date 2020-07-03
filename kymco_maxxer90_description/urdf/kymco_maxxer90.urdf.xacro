@@ -520,7 +520,7 @@
     <link name="rgbd_optical_camera_frame"/>
 
     <joint name="rgbd_optical_camera_joint" type="fixed">
-        <origin xyz="0.5 0.0 0.4" rpy="0 0 ${PI/2}"/>
+        <origin xyz="0.5 0.0 0.4" rpy="0 0 0"/>
         <parent link="base_link"/>
         <child link="rgbd_optical_camera_frame"/>
     </joint>
@@ -582,7 +582,7 @@
             <robotNamespace>/</robotNamespace>
             <updateRate>40</updateRate>
             <bodyName>base_link</bodyName>
-            <frameId>base_link</frameId>
+            <frameId>gps_link</frameId>
             <topicName>navsat/fix</topicName>
             <velocityTopicName>navsat/vel</velocityTopicName>
             <referenceLatitude>37.9949</referenceLatitude>
