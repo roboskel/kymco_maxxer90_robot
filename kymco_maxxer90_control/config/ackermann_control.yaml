@@ -15,7 +15,8 @@ kymco_maxxer90_ackermann_steering_controller:
     wheel_separation_h_multiplier: 1.0
     steer_pos_multiplier: 1.0
     base_frame_id: base_link
-    odo_frame_id: odom
+    odom_frame_id: odom
+    enable_odom_tf: false
 
     linear:
         x:
