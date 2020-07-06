@@ -1,0 +1,30 @@
+controller_frequency: 15.0
+recovery_behaviour_enabled: true
+
+TebLocalPlannerROS:
+    # Robot configuration parameters  
+    acc_lim_x: 1.0
+    acc_lim_y: 0
+    # TODO
+    acc_lim_theta: 0.5
+
+    max_vel_x: 6.1
+    max_vel_x_backwards: 0
+    penalty_epsilon: 0
+    # TODO
+    max_vel_theta: 0.5
+    max_vel_y: 0.0
+
+    min_turning_radius: 2.55
+
+    wheelbase: 0.97
+
+    #cmd_angle_instead_rotvel: true
+
+    # Goal Tolerance Parameters
+    xy_goal_tolerance: 0.2
+    yaw_goal_tolerance: 0.3
+    #free_goal_vel: true
+
+    odom_topic: odom
+    map_frame: /odom
