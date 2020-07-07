@@ -11,5 +11,8 @@
 
   <buildtool_depend>catkin</buildtool_depend>
   <depend>robot_localization</depend>
+  <depend>global_planner</depend>
+  <depend>sbpl_lattice_planner</depend>
+  <depend>teb_local_planner</depend>
 
 </package>
