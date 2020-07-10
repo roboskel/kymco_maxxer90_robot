@@ -45,9 +45,7 @@
   <arg name="publish_tf"                default="true"/>
   <arg name="tf_publish_rate"           default="0"/>
 
-  <!-- <arg name="filters"                   default=""/> -->
-  <!-- <arg name="filters"                   default="pointcloud,disparity,hole_filling"/> -->
-  <arg name="filters"                   default="pointcloud"/>
+  <arg name="filters"                   default="pointcloud,decimation,temporal,spatial"/>
   <arg name="clip_distance"             default="-2"/>
   <arg name="linear_accel_cov"          default="0.01"/>
   <arg name="initial_reset"             default="false"/>
@@ -57,6 +55,34 @@
   <arg name="calib_odom_file"           default=""/>
   <arg name="publish_odom_tf"           default="true"/>
   <arg name="allow_no_texture_points"   default="false"/>
+
+  <!-- Spatial filtering -->
+  <param name="/camera/spatial/frames_queue_size" value="16" />
+  <param name="/camera/spatial/filter_magnitude" value="1" />
+  <param name="/camera/spatial/filter_smooth_delta" value="1" />
+  <param name="/camera/spatial/holes_fill" value="0" />
+  <param name="/camera/spatial/stream_filter" value="1" />
+  <param name="/camera/spatial/stream_format_filter" value="0" />
+  <param name="/camera/spatial/filter_smooth_alpha" value="0.25" />
+  
+  <!-- Decimation filtering -->
+  <param name="/camera/decimation/frames_queue_size" value="16" />
+  <param name="/camera/decimation/filter_magnitude" value="1" />
+  <param name="/camera/decimation/stream_filter" value="1" />
+
+  <!-- Hole filling filtering -->
+  <param name="/camera/hole_filling/frames_queue_size" value="16" />
+  <param name="/camera/hole_filling/holes_fill" value="2" />
+  <param name="/camera/hole_filling/stream_filter" value="1" />
+  <param name="/camera/hole_filling/stream_format_filter" value="0" />
+
+  <!-- Temporal filtering -->
+  <param name="/camera/temporal/frames_queue_size" value="16" />
+  <param name="/camera/temporal/filter_smooth_delta" value="0.3" />
+  <param name="/camera/temporal/holes_fill" value="1" />
+  <param name="/camera/temporal/stream_filter" value="1" />
+  <param name="/camera/temporal/stream_format_filter" value="0" />
+  <param name="/camera/temporal/filter_smooth_alpha" value="0.2" />
 
   <group ns="$(arg camera)">
     <include file="$(find realsense2_camera)/launch/includes/nodelet.launch.xml">
