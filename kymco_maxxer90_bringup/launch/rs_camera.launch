@@ -1,5 +1,8 @@
 <?xml version="1.0"?>
 <launch>
+
+  <!-- rosbag record /camera/color/camera_info /camera/color/image_raw /camera/depth/camera_info /camera/depth/color/points /camera/depth/image_rect_raw /camera/imu /tf /tf_static -b 131072 -->
+
   <arg name="serial_no"           default=""/>
   <arg name="usb_port_id"         default=""/>
   <arg name="device_type"         default=""/>
