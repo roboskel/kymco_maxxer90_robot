@@ -11,7 +11,8 @@
 
         <!-- <param name="base_global_planner" value="global_planner/GlobalPlanner" /> -->
         <param name="base_global_planner" value="SBPLLatticePlanner" />
-        <param name="SBPLLatticePlanner/primitive_filename" value="$(find kymco_maxxer90_navigation)/motion_primitives/ackermann.mprim" />
+        <!-- <param name="SBPLLatticePlanner/primitive_filename" value="$(find kymco_maxxer90_navigation)/motion_primitives/ackermann.mprim" /> -->
+        <param name="SBPLLatticePlanner/primitive_filename" value="$(find kymco_maxxer90_navigation)/motion_primitives/ackermann_julia.mprim" />
         <param name="base_local_planner" value="teb_local_planner/TebLocalPlannerROS" />
         <remap from="cmd_vel" to="kymco_maxxer90_ackermann_steering_controller/cmd_vel" />
     </node>
