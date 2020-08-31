@@ -30,6 +30,7 @@
 			<child link="${wheel_prefix}_wheel_link"/>
 			<xacro:insert_block name="joint_pose"/>
 			<axis xyz="0 1 0" rpy="0 0 0" />
+            <dynamics damping="1" friction="1" />
 		</joint>
 
         <gazebo reference="${wheel_prefix}_wheel_link">

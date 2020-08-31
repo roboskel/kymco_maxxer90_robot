@@ -81,6 +81,7 @@
             <parent link="${wheel_prefix}_wheel_steering_link" />
 			<child link="${wheel_prefix}_wheel_link"/>
 			<axis xyz="0 1 0" rpy="0 0 0" />
+            <dynamics damping="0.1" friction="0.1" />
         </joint>
 
         <gazebo reference="${wheel_prefix}_wheel_link">
