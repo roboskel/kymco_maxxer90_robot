@@ -67,7 +67,7 @@ gazebo_ros_control:
             i: 0.1
             d: 0.0
         steering_wheel_joint:
-            p: 20.0
+            p: 200.0
             i: 0.1
             d: 0.0
 
