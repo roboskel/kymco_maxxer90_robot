@@ -9,5 +9,7 @@
     </include>
 
     <include file="$(find kymco_maxxer90_gazebo)/launch/spawn_kymco_maxxer90.launch"/>
+    
+    <include file="$(find kymco_maxxer90_navigation)/launch/robot_localization.launch"/>
 
 </launch>
