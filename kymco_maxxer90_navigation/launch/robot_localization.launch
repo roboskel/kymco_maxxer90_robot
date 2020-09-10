@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <launch>
 
-    <!-- <include file="$(find kymco_maxxer90_navigation)/launch/visual_odometry.launch"/> -->
+    <include file="$(find kymco_maxxer90_navigation)/launch/visual_odometry.launch"/>
 
     <node pkg="robot_localization" type="ekf_localization_node" name="ekf_localization">
         <rosparam command="load" file="$(find kymco_maxxer90_navigation)/config/ekf_localization.yaml" />
