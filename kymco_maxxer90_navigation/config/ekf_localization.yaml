@@ -2,25 +2,21 @@ odom_frame: odom
 base_link_frame: base_link
 world_frame: odom
 
-two_d_mode: true #false | true <=> 0 stis times sxetikes me Z, roll, pitch
-
+two_d_mode: true                    #false | true <=> 0 stis times sxetikes me Z, roll, pitch
 dynamic_process_noise_covariance: true
-
 frequency: 50
 
-odom0 -> navsat_transform_node output | used for velocity verification : if almost 0, supports no movement, else have probably moved
-odom0: odometry/gps
+odom0: odometry/gps                 # navsat_transform_node output | used for velocity verification : if almost 0, supports no movement, else have probably moved
 odom0_config: [true,  true,  true,
                false, false, false,
                false, false, false,
                false, false, false,
                false, false, false]
 odom0_queue_size: 10
-odom0_nodelay: false # isos true vasi paradeigmatos
+odom0_nodelay: false                # isos true vasi paradeigmatos
 odom0_differential: true
 
-#odom1 -> camera, check rtabmap
-odom1: mono_odometer/odometry
+odom1: /odom                        # camera, computed via rtabmap (visual_odometry.launch)
 odom1_config: [true,  true,  true,
                false, false, false,
                false, false, false,
@@ -28,8 +24,7 @@ odom1_config: [true,  true,  true,
                false, false, false]
 odom1_queue_size: 10
 odom1_nodelay: false
-# odom1_differential is true in order to find velocities from pose change | preferred this because twist is regarding rgbd_base_link
-odom1_differential: false # prosdiorizei kai auto position, tha to xrisimopoiiso gia na bgalo velocity opote true
+odom1_differential: true            # is true in order to find velocities from pose change | preferred this because twist is regarding rgbd_base_link
 
 #https://answers.ros.org/question/269030/imu-convention-for-robot_localization/
 #https://answers.ros.org/question/298415/imu-data-to-be-used-with-robot_localization/

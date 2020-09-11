@@ -5,23 +5,32 @@
     <!-- fistly image_raw -> image_rect -->
     <node ns="$(arg camera)" pkg="image_proc" type="image_proc" name="image_proc" />
 
-<!--
-<node pkg="viso2_ros" type="mono_odometer" name="mono_odometer">
-    <remap from="image" to="$(arg camera)/image_rect"/>
+    <node pkg="rtabmap_ros" type="rtabmap" name="rtabmap" args="--delete_db_on_start" >
+        <!-- INPUT -->
+        <remap from="rgb/image" to="$(arg camera)/image_rect" />
+        <remap from="rgb/camera_info" to="$(arg camera)/camera_info" />
+        <remap from="depth/image" to="/camera/depth/image_raw" />
+        <!--<remap from="imu" to="rtabmap/imu/data" />-->
 
-    <param name="base_link_frame_id" value="rgbd_optical_camera_frame" />
+        <!-- FRAMES -->
+        <param name="frame_id" value="rgbd_optical_camera_frame" />
+        <param name="odom_frame_id" value="odom" />
+        <param name="publish_tf" value="false" />
 
-    <param name="camera_height" value="1.00" />
-    <param name="camera_pitch"  value="0.00" />
-</node>
--->
+        <!-- PARAMETERS -->
+        <param name="Rtabmap/StartNewMapOnLoopClosure" value="true" />
+        <param name="RGBD/SavedLocalizationIgnored" value="false" />
+        <param name="subscribe_depth" value="true" />
 
-    <node pkg="rtabmap_ros" type="rgbd_odometry" name="rgbd_odometry">
+    </node>
+
+    <node pkg="rtabmap_ros" type="rgbd_odometry" name="rgbd_odometry">      <!-- https://github.com/introlab/rtabmap_ros/blob/master/launch/rtabmap.launch -->
     
         <!-- INPUT -->
         <remap from="rgb/image" to="$(arg camera)/image_rect" />
         <remap from="rgb/camera_info" to="$(arg camera)/camera_info" />
         <remap from="depth/image" to="/camera/depth/image_raw" />
+        <remap from="imu" to="/imu/data" />
 
         <!-- OUTPUT -->
         <remap from="/odom" to="/odom" />
@@ -29,24 +38,22 @@
         <!-- FRAMES -->
         <param name="frame_id" value="rgbd_optical_camera_frame" />
         <param name="odom_frame_id" value="odom" />
+        <param name="publish_tf" value="false" />       <!-- https://answers.ros.org/question/287084/handle-lost-visual-odometry-with-imu-sensor-fusion/ | to analamvanei to robot_localization-->
 
-        <!-- RTABMAP PARAMETERS -->
+        <!-- PARAMETERS -->
         <param name="Odom/Strategy" value="1"/>         <!-- 0=Frame-to-Map (F2M) | 1=Frame-to-Frame (F2F) -->
         <param name="Odom/Holonomic" value="false" />   <!-- cannot move instantly left/right -->
-        <!-- <param name="Optimizer/Iterations" value="0"/> -->
-        <!--<param name="Odom/FillInfoData" value="true" /> -->
 
-        <!-- Automatically call reset odometry when lost, wait till finding a familiar frame, no null sent| https://github.com/introlab/rtabmap_ros/issues/100 -->
-        <param name="Odom/ResetCountdown" value="1" />
-        <param name="Rtabmap/StartNewMapOnLoopClosure" value="true" />
+        <!-- Automatically call reset odometry when lost, wait till finding a familiar frame, no null sent -->
+        <!--  https://github.com/introlab/rtabmap_ros/issues/100 | http://wiki.ros.org/rtabmap_ros/Tutorials/Advanced%20Parameter%20Tuning#Odometry_Auto-Reset -->
+        <!-- <param name="Rtabmap/StartNewMapOnLoopClosure" value="false" /> by default at rtabmap node -->
+        <param name="Odom/ResetCountdown" value="1" />  <!-- automatically reset odom to last pose -->
         <param name="publish_null_when_lost" value="false" />
 
         <param name="Reg/Force3DoF" value="true" />     <!-- 2D movement -->
-
-        <!-- see here https://answers.ros.org/question/287084/handle-lost-visual-odometry-with-imu-sensor-fusion/ | to analamvanei to robot_localization-->
-        <param name="publish_tf" value="false" />
-
+        <param name="wait_imu_to_init" value="true" />  <!-- add imu for orientation -->
         <param name="subscribe_rgbd" value="false" />   <!-- mporoume na kanoume kai synchronize to depth me raw me nodelet ktl(na to rotiso) -->
 
     </node>
+
 </launch>
