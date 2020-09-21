@@ -1,17 +1,40 @@
 <?xml version="1.0"?>
 <launch>
+    <arg name="camera" default="/camera/color"/>
 
-<arg name="camera" default="/camera/color"/>
+    <!-- fistly image_raw -> image_rect -->
+    <node ns="$(arg camera)" pkg="image_proc" type="image_proc" name="image_proc" />
 
-<node ns="$(arg camera)" pkg="image_proc" type="image_proc" name="image_proc" />
+    <node pkg="rtabmap_ros" type="rgbd_odometry" name="rgbd_odometry" clear_params="true">
 
-<node pkg="viso2_ros" type="mono_odometer" name="mono_odometer">
-    <remap from="image" to="$(arg camera)/image_rect"/>
+        <!-- INPUT -->
+        <remap from="rgb/image" to="$(arg camera)/image_rect" />
+        <remap from="rgb/camera_info" to="$(arg camera)/camera_info" />
+        <remap from="depth/image" to="/camera/depth/image_raw" />
+        <remap from="imu" to="/imu/data" />             <!-- https://github.com/introlab/rtabmap_ros/blob/master/launch/rtabmap.launch -->
 
-    <param name="base_link_frame_id" value="rgbd_optical_camera_frame" />
+        <!-- OUTPUT -->
+        <remap from="/odom" to="/odometry/vo" />
 
-    <param name="camera_height" value="1.00" />
-    <param name="camera_pitch"  value="0.00" />
-</node>
+        <!-- FRAMES -->
+        <param name="frame_id" value="rgbd_optical_camera_frame" />
+        <param name="odom_frame_id" value="odom" />
+        <param name="publish_tf" value="false" />       <!-- https://answers.ros.org/question/287084/handle-lost-visual-odometry-with-imu-sensor-fusion/ -->
+
+        <!-- PARAMETERS -->
+        <param name="Odom/Strategy" value="1"/>         <!-- 0=Frame-to-Map (F2M) | 1=Frame-to-Frame (F2F) -->
+        <param name="Odom/Holonomic" value="false" />   <!-- cannot move instantly left/right - compute y = x*tan(yaw) -->
+        <param name="Reg/Force3DoF" value="true" />     <!-- 2D movement | z, roll, pitch = 0 -->
+        <param name="Reg/Strategy" value="0" />         <!-- 0=Vis default, 1=Icp, 2=VisIcp -->
+
+        <!-- Automatically call reset odometry when lost, no null message sent -->
+        <!-- https://github.com/introlab/rtabmap_ros/issues/100 | http://wiki.ros.org/rtabmap_ros/Tutorials/Advanced%20Parameter%20Tuning#Odometry_Auto-Reset -->
+        <param name="Odom/ResetCountdown" value="1" />  <!-- automatically reset odom to last pose as soon as it is lost -->
+        <param name="publish_null_when_lost" value="false" />
+
+        <param name="wait_imu_to_init" value="true" />  <!-- add imu for orientation -->
+        <param name="subscribe_rgbd" value="false" />   <!-- no need to synchronize depth/rect with nodelet -->
+
+    </node>
 
 </launch>
