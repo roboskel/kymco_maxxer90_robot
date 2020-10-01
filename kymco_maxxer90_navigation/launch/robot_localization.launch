@@ -1,14 +1,22 @@
 <?xml version="1.0"?>
 <launch>
 
+    <node pkg="tf" type="static_transform_publisher" name="static_world_to_odom_publisher" args="0 0 0 0 0 0 /world /odom 100"/> <!-- evaluation, done in order to produce octomap -->
+
     <include file="$(find kymco_maxxer90_navigation)/launch/visual_odometry.launch"/>
 
-    <node pkg="robot_localization" type="ekf_localization_node" name="ekf_localization">
-        <rosparam command="load" file="$(find kymco_maxxer90_navigation)/config/ekf_localization.yaml" />
+    <include file="$(find kymco_maxxer90_navigation)/launch/lidar_odometry.launch" />
+
+    <rosparam command="load" file="$(find kymco_maxxer90_navigation)/config/ekf_localization.yaml" />
+
+    <node pkg="robot_localization" type="ekf_localization_node" name="ekf_vo_imu" clear_params="true">
+        <remap from="odometry/filtered" to="odometry/vo_imu" />
     </node>
 
+    <node pkg="robot_localization" type="ekf_localization_node" name="ekf_loc" clear_params="true"/>
+
     <!-- https://answers.ros.org/question/200071/how-to-fuse-imu-gps-using-robot_localization/ -->
-    <node pkg="robot_localization" type="navsat_transform_node" name="navsat_transform_node">
+    <node pkg="robot_localization" type="navsat_transform_node" name="navsat_transform_node" clear_params="true" >
 
         <!-- INPUT -->
         <remap from="odometry/filtered" to="odometry/filtered" />
@@ -23,6 +31,8 @@
         <param name="magnetic_declination_radians" value="0.08342674" />
 
     </node>
+
+    <include file="$(find kymco_maxxer90_navigation)/launch/octomap_mapping_depth.launch"/>
 
 </launch>
 

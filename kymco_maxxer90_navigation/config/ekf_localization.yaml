@@ -1,42 +1,97 @@
-odom_frame: odom
-base_link_frame: base_link
-world_frame: odom
-
-two_d_mode: true    # true <=> 0 at z, roll, pitch, vz, vroll, vpitch, az and fuses them
-#dynamic_process_noise_covariance: true
-frequency: 50
-
 # configuration order -> [x, y, z, roll, pitch, yaw, vx, vy, vz, vroll, vpitch, vyaw, ax, ay, az]
-# non-holonomic robot -> output should have vy, ay = 0
+# two_d_mode -> 0 at z, roll, pitch, vz, vroll, vpitch, az and fuses them
+ekf_vo_imu:
+    odom_frame: odom
+    base_link_frame: base_link
+    world_frame: odom
+    publish_tf: false
 
-odom0: odometry/gps
-odom0_config: [true,  true,  false,
-               false, false, false,
-               false, false, false,
-               false, false, false,
-               false, false, false]
-odom0_queue_size: 10
-odom0_nodelay: false
-odom0_differential: true
+    two_d_mode: true
+    dynamic_process_noise_covariance: true
+    frequency: 50
 
-odom1: odometry/vo
-odom1_config: [true,  true,  false,
-               false, false, true,
-               false, false, false,
-               false, false, false,
-               false, false, false]
-odom1_queue_size: 10
-odom1_nodelay: false
-odom1_differential: true
+    imu0: imu/data
+    imu0_config: [false, false, false,
+                  false, false, true,
+                  false, false, false,
+                  false, false, true,
+                  true,  true,  false]
+    imu0_queue_size: 10
+    imu0_nodelay: false
+    imu0_differential: false
+    imu0_relative: true
+    imu0_remove_gravitational_acceleration: true
 
-imu0: imu/data
-imu0_config: [false, false, false,
-              false, false, true,
-              false, false, false,
-              false, false, true,
-              true,  false, false]
-imu0_queue_size: 10
-imu0_nodelay: false
-imu0_differential: false
-imu0_relative: true
-imu0_remove_gravitational_acceleration: true
+    # camera odometry via rtabmap (visual_odometry.launch) | frame_id: odom for poses | child_id: rgbd_camera for twists
+    # https://docs.ros.org/melodic/api/robot_localization/html/preparing_sensor_data.html#odometry
+    # https://answers.ros.org/question/350534/robot_localization-with-hector_sim_imu-in-3d-mode-robot-starts-flying-up/
+    odom0: odometry/vo
+    odom0_config: [true,  true,  false,
+                   false, false, true,
+                   false, false, false,
+                   false, false, false,
+                   false, false, false]
+    odom0_queue_size: 10
+    odom0_nodelay: false
+    odom0_relative: false
+    odom0_differential: true
+
+ekf_loc:
+    odom_frame: odom
+    base_link_frame: base_link
+    world_frame: odom
+    publish_tf: true                    # publish odom -> base_link transformation
+
+    two_d_mode: true                    # true <=> 0 at z, roll, pitch, vz, vroll, vpitch, az and fuses them
+    dynamic_process_noise_covariance: true
+    frequency: 50
+
+    imu0: imu/data
+    imu0_config: [false, false, false,
+                  false, false, true,
+                  false, false, false,
+                  false, false, true,
+                  true,  true,  false]
+    imu0_queue_size: 10
+    imu0_nodelay: false
+    imu0_differential: false
+    imu0_relative: true
+    imu0_remove_gravitational_acceleration: true
+
+    # odometry from previous ekf_node -> visual odometry filtered with imu
+    odom0: odometry/vo_imu
+    odom0_config: [true,  true,  false,
+                   false, false, true,
+                   false, false, false,
+                   false, false, false,
+                   false, false, false]
+    odom0_queue_size: 10
+    odom0_nodelay: false
+    odom0_relative: false
+    odom0_differential: true
+
+
+    # https://answers.ros.org/question/225694/interfacing-rtabmap-and-robot_localization/
+
+    # https://answers.ros.org/question/319360/robot_localization-high-pose-drift-with-only-imu-data/ -> accumulates error, need to provide absolute values for position for better accuracy
+    # navsat_transform_node output, frame_id: odom, has only poses
+    odom1: odometry/gps
+    odom1_config: [true,  true,  false,
+                   false, false, false,
+                   false, false, false,
+                   false, false, false,
+                   false, false, false]
+    odom1_queue_size: 10
+    odom1_nodelay: false
+    odom1_relative: false
+    odom1_differential: true
+
+    odom2: odometry/icp
+    odom2_config: [true,  true,  false,
+                   false, false, true,
+                   false, false, false,
+                   false, false, false,
+                   false, false, false]
+    odom2_queue_size: 10
+    odom2_relative: false
+    odom2_differential: true
