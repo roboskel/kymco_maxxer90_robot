@@ -1,41 +1,42 @@
 <?xml version="1.0"?>
 <launch>
     <arg name="camera" default="/camera/color"/>
+    <arg name="camera_depth" default="/camera/depth"/>
 
     <!-- fistly image_raw -> image_rect -->
-    <node ns="$(arg camera)" pkg="image_proc" type="image_proc" name="image_proc" />
+    <node ns="$(arg camera)" pkg="image_proc" type="image_proc" name="image_proc"/>
 
     <!-- http://wiki.ros.org/rtabmap_ros/Tutorials/Advanced%20Parameter%20Tuning#Visual_Odometry -->
     <node pkg="rtabmap_ros" type="rgbd_odometry" name="rgbd_odometry" clear_params="true">
 
         <!-- INPUT -->
-        <remap from="rgb/image" to="$(arg camera)/image_rect" />
-        <remap from="rgb/camera_info" to="$(arg camera)/camera_info" />
-        <remap from="depth/image" to="/camera/depth/image_raw" />
-        <remap from="imu" to="/imu/data" />             <!-- https://github.com/introlab/rtabmap_ros/blob/master/launch/rtabmap.launch -->
+        <param name="subscribe_rgbd"    value="false"/>
+        <remap from="rgb/image"         to="$(arg camera)/image_rect"/>
+        <remap from="rgb/camera_info"   to="$(arg camera)/camera_info"/>
+        <remap from="depth/image"       to="$(arg camera_depth)/image_raw"/>
+        <remap from="imu"               to="/imu/data"/>
 
         <!-- OUTPUT -->
-        <remap from="odom" to="/odometry/vo" />
+        <remap from="odom" to="/odometry/vo"/>
 
         <!-- FRAMES -->
-        <param name="frame_id" value="rgbd_optical_camera_frame" />
-        <param name="odom_frame_id" value="odom" />
-        <param name="publish_tf" value="false" />       <!-- https://answers.ros.org/question/287084/handle-lost-visual-odometry-with-imu-sensor-fusion/ -->
+        <param name="frame_id"      value="rgbd_optical_camera_frame"/>
+        <param name="odom_frame_id" value="odom"/>
+        <param name="publish_tf"    value="false"/>     <!-- robot_localization node publishes tf -->
 
         <!-- PARAMETERS -->
-        <param name="Odom/Strategy" value="1"/>         <!-- 0=Frame-to-Map (F2M) 1=Frame-to-Frame (F2F) -->
-        <param name="Odom/Holonomic" value="false" />   <!-- cannot move instantly left/right - compute y = x*tan(yaw) -->
-        <param name="Reg/Force3DoF" value="true" />     <!-- 2D movement | z, roll, pitch = 0 -->
-        <param name="Reg/Strategy" value="0" />         <!-- 0=Vis default, 1=Icp, 2=VisIcp -->
+        <param name="Odom/Strategy"     value="1"/>         <!-- 0=Frame-to-Map (F2M) 1=Frame-to-Frame (F2F) -->
+        <param name="Odom/Holonomic"    value="false"/>     <!-- cannot move instantly left/right - compute y = x*tan(yaw) -->
+        <param name="Reg/Force3DoF"     value="true"/>      <!-- 2D movement | z, roll, pitch = 0 -->
+        <param name="Reg/Strategy"      value="0"/>         <!-- 0=Vis default, 1=Icp, 2=VisIcp -->
+        <param name="wait_imu_to_init"  value="true"/>      <!-- add imu for orientation -->
+        <param name="approx_sync"       value="true"/>
 
         <!-- Automatically call reset odometry when lost, no null message sent -->
         <!-- https://github.com/introlab/rtabmap_ros/issues/100 | http://wiki.ros.org/rtabmap_ros/Tutorials/Advanced%20Parameter%20Tuning#Odometry_Auto-Reset -->
-        <param name="Odom/ResetCountdown" value="1" />  <!-- automatically reset odom to last pose as soon as it is lost, get position from tf -->
-        <param name="publish_null_when_lost" value="false" />
-        <!--<param name="Odom/GuessMotion" value="true" />--> <!-- http://official-rtab-map-forum.67519.x6.nabble.com/Ransac-Frame-to-Frame-Stability-td225.html -->
-
-        <param name="wait_imu_to_init" value="true" />  <!-- add imu for orientation -->
-        <param name="subscribe_rgbd" value="false" />   <!-- only one camera -->
+        <param name="Odom/ResetCountdown" value="1"/>  <!-- automatically reset odom to last pose as soon as it is lost, get position from tf -->
+        <param name="publish_null_when_lost" value="false"/>
+        <!--<param name="Odom/GuessMotion" value="true"/>--> <!-- http://official-rtab-map-forum.67519.x6.nabble.com/Ransac-Frame-to-Frame-Stability-td225.html -->
 
     </node>
 
