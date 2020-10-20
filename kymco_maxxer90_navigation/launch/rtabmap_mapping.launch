@@ -102,7 +102,8 @@
 
     <node pkg="nodelet" type="nodelet" name="obstacles_detection" args="load rtabmap_ros/obstacles_detection standalone_manager">
          <remap from="cloud" to="/voxel_grid/output"/>
-         <remap from="obstacles" to="/planner_cloud"/>
+         <remap from="obstacles" to="/obstacles"/>  <!-- Can be used for marking -->
+         <remap from="ground" to="/ground"/>        <!-- Can be used for clearing -->
 
          <param name="frame_id" type="string" value="base_link"/>
          <param name="map_frame_id" type="string" value="map"/>
