@@ -1,27 +1,32 @@
-footprint: [ [0.65, -0.425],  [-1.0, -0.425], [-1.0, 0.425], [0.65, 0.425] ]
+# http://official-rtab-map-forum.67519.x6.nabble.com/Problem-with-global-and-local-costmap-td1867.html
 
-
-transform_tolerance: 0.2
-map_type: costmap
+footprint: [ [0.65, -0.425], [-1.0, -0.425], [-1.0, 0.425], [0.65, 0.425] ]
+transform_tolerance: 0.7
 
 obstacle_layer:
-    enabled: true
-    obstacle_range: 5.0
-    raytrace_range: 5.5
-    inflation_radius: 0.2
-    track_unknown_space: false
-    combination_method: 1
+    max_obstacle_height: 1.0 # should be a little higher than the robot's height
+    obstacle_range: 4.5
+    raytrace_range: 5.0     # check parameter "Grid/RangeMax" at rtabmap_mapping.launch
+    footprint_clearing_enabled: true
 
-    # TODO pointcloud to laserscan
-    # observation_sources: laser_scan_sensor
-    # laser_scan_sensor: {data_type: LaserScan, topic: scan, marking: true, clearing: true}
+    observation_sources: point_cloud2_sensor #scan_sensor point_cloud2_sensor
+    #scan_sensor: {
+    #    data_type: LaserScan,
+    #    topic: /scan_obstacles,
+    #    clearing: true,
+    #    marking: true,
+    #    sensor_frame: rgbd_optical_camera_frame,
+    #    observation_persistence: 0.0,
+    #    expected_update_rate: 0.0,
+    #    inf_is_valid: true
+    #}
 
-
-inflation_layer:
-    enabled:              true
-    cost_scaling_factor:  5.0  # exponential rate at which the obstacle cost drops off (default: 10)
-    inflation_radius:     0.3  # max. distance from an obstacle at which costs are incurred for planning paths.
-
-static_layer:
-    enabled: true
-    map_topic: "/map"
+    point_cloud2_sensor: {
+        data_type: PointCloud2,
+        topic: /octomap_obstacles, #/planner_cloud, #/octomap_obstacles,
+        clearing: true,
+        marking: true,
+        sensor_frame: rgbd_optical_camera_frame,
+        observation_persistence: 0.0,
+        expected_update_rate: 0.0
+    }
