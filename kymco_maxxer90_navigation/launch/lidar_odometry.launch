@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<launch>
+    <arg name="camera_depth" default="/camera/depth"/>
+
+    <node pkg="rtabmap_ros" type="icp_odometry" name="icp_odometry" clear_params="true">    <!-- http://official-rtab-map-forum.67519.x6.nabble.com/mapping-with-kinect-v2-laser-scan-td6367.html -->
+
+        <!-- INPUT -->
+        <remap from="scan_cloud" to="$(arg camera_depth)/points" />
+        <remap from="imu" to="/imu/data" />
+
+        <!-- OUTPUT -->
+        <remap from="odom" to="/odometry/icp" />
+
+        <!-- FRAMES -->
+        <param name="frame_id" value="rgbd_optical_camera_frame" />
+        <param name="odom_frame_id" value="odom" />
+        <param name="publish_tf" value="false" />       <!-- robot_localization node publishes tf -->
+
+        <!-- PARAMETERS -->
+        <param name="Odom/Strategy" value="1"/>         <!-- 0=Frame-to-Map (F2M) | 1=Frame-to-Frame (F2F) -->
+        <param name="Odom/Holonomic" value="false" />   <!-- cannot move instantly left/right - compute y = x*tan(yaw) -->
+        <param name="Reg/Force3DoF" value="true" />     <!-- 2D movement | z, roll, pitch = 0 -->
+        <param name="Reg/Strategy" value="1" />         <!-- 0=Vis default, 1=Icp, 2=VisIcp -->
+
+        <!-- Automatically call reset odometry when lost, no null message sent -->
+        <!-- https://github.com/introlab/rtabmap_ros/issues/100 | http://wiki.ros.org/rtabmap_ros/Tutorials/Advanced%20Parameter%20Tuning#Odometry_Auto-Reset -->
+        <param name="Odom/ResetCountdown" value="1" />  <!-- automatically reset odom to last pose as soon as it is lost, get position from tf -->
+        <param name="publish_null_when_lost" value="false" />
+
+        <param name="wait_imu_to_init" value="true" />  <!-- add imu for orientation -->
+        <param name="Icp/PointToPlane" value="false"/>
+        <param name="scan_normal_k" value="0" />
+        <param name="scan_normal_radius" value="0.0" />
+
+    </node>
+
+
+</launch>
