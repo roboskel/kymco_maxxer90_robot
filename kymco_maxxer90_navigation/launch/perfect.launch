@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<?ignore
+    A launch file to easily evaluate the performance of SLAM and local planner in the case of perfect odometry.
+    If used should make sure to :
+        1) uncomment image_proc at rtabmap_mapping.launch
+        2) odom_topic at base_local_planner_params.yaml is /odom_perfect
+?>
+<launch>
+
+    <node pkg="message_to_tf" type="message_to_tf" name="message_to_tf" args="/odom_perfect"/>
+    <node pkg="tf" type="static_transform_publisher" name="static_odom_to_world_publisher" args="0 0 0 0 0 0 /odom /world 100"/>
+    <include file="$(find kymco_maxxer90_navigation)/launch/rtabmap_mapping.launch"/>
+    <include file="$(find kymco_maxxer90_navigation)/launch/move_base.launch"/>
+    <node pkg="costmap_2d" type="costmap_2d_markers" name="vizz">
+        <remap from="voxel_grid" to="/move_base/global_costmap/obstacle_layer/voxel_grid"/>
+        <remap from="visualization_marker" to="/viz"/>
+    </node>
+
+    <node pkg="rviz" type="rviz" name="rviz"/>
+</launch>

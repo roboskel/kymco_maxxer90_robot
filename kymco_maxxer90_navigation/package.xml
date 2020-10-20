@@ -14,5 +14,7 @@
   <depend>global_planner</depend>
   <depend>sbpl_lattice_planner</depend>
   <depend>teb_local_planner</depend>
-
+  <depend>image_proc</depend>
+  <depend>rtabmap_ros</depend>
+  <depend>move_base</depend>
 </package>
