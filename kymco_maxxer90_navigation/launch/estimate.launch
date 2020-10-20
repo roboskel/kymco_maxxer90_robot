@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<?ignore
+    A launch file to bring up all the necessary nodes in order to evaluate localization, SLAM and move_base.
+    If used should make sure to :
+        1) comment image_proc at rtabmap_mapping.launch
+        2) odom_topic at base_local_planner_params.yaml is /odometry/filtered
+?>
+<launch>
+    <include file="$(find kymco_maxxer90_navigation)/launch/robot_localization.launch"/>
+    <include file="$(find kymco_maxxer90_navigation)/launch/rtabmap_mapping.launch"/>
+    <include file="$(find kymco_maxxer90_navigation)/launch/move_base.launch"/>
+    <node pkg="costmap_2d" type="costmap_2d_markers" name="vizz">
+        <remap from="voxel_grid" to="/move_base/global_costmap/obstacle_layer/voxel_grid"/>
+        <remap from="visualization_marker" to="/viz"/>
+    </node>
+    <node pkg="rviz" type="rviz" name="rviz"/>
+</launch>
