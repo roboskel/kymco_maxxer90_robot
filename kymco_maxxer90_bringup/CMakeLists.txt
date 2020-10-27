@@ -3,9 +3,22 @@ project(kymco_maxxer90_bringup)
 
 add_compile_options(-std=c++11)
 
-find_package(catkin REQUIRED)
+find_package(catkin REQUIRED COMPONENTS
+    roscpp
+    serial
+    hardware_interface
+)
 
-catkin_package()
+catkin_package(
+    # INCLUDE_DIRS include
+    CATKIN_DEPENDS roscpp serial hardware_interface 
+)
 
-include_directories()
+include_directories(
+    # include
+    ${catkin_INCLUDE_DIRS}
+)
+
+add_executable(motor_controller src/motor_controller.cpp )
+target_link_libraries(motor_controller ${catkin_LIBRARIES})
 
