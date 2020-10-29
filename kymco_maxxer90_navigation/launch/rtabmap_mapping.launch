@@ -24,7 +24,7 @@
 
         <!-- OUTPUT -->
         <remap from="grid_map" to="/map"/>                          <!-- Input for the global costmap -->
-        <remap from="octomap_obstacles" to="/octomap_obstacles"/>   <!-- PointCloud2 output can be used in obstacle detection -->
+        <!-- <remap from="octomap_obstacles" to="/octomap_obstacles"/>  --> <!-- PointCloud2 output can be used in obstacle detection --> 
 
         <!-- FRAMES -->
         <param name="frame_id"      value="base_link"/>
