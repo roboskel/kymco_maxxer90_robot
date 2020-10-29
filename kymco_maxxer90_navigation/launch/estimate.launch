@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<launch>
+    <node pkg="tf" type="static_transform_publisher" name="static_world_to_map_publisher" args="0 0 0 0 0 0 /world /map 100"/>
+    <include file="$(find kymco_maxxer90_navigation)/launch/camera.launch"/>
+    <include file="$(find kymco_maxxer90_navigation)/launch/robot_localization.launch"/>
+    <include file="$(find kymco_maxxer90_navigation)/launch/rtabmap_mapping.launch"/>
+    <include file="$(find kymco_maxxer90_navigation)/launch/move_base.launch">
+        <arg name="odom_topic" value="/odometry/filtered"/>
+    </include>
+    <node pkg="costmap_2d" type="costmap_2d_markers" name="vizz">
+        <remap from="voxel_grid" to="/move_base/global_costmap/obstacle_layer/voxel_grid"/>
+        <remap from="visualization_marker" to="/viz"/>
+    </node>
+    <node pkg="rviz" type="rviz" name="rviz"/>
+
+<?ignore
+    <include file="$(find compare)/launch/compare_vel_or_poses.launch"/>
+?>
+
+</launch>

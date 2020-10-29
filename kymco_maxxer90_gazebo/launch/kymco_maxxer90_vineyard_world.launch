@@ -2,7 +2,7 @@
 
 <launch>
 
-    <arg name="world_name" default="$(find kymco_maxxer90_gazebo)/worlds/empty.world"/>
+    <arg name="world_name" default="$(find kymco_maxxer90_gazebo)/worlds/vineyard.world"/>
 
     <include file="$(find kymco_maxxer90_gazebo)/launch/empty_world.launch">
         <arg name="world_name" value="$(arg world_name)"/>
@@ -10,4 +10,8 @@
 
     <include file="$(find kymco_maxxer90_gazebo)/launch/spawn_kymco_maxxer90.launch"/>
 
+<?ingore
+    <include file="$(find kymco_maxxer90_navigation)/launch/estimate.launch"/>
+    <include file="$(find kymco_maxxer90_navigation)/launch/perfect.launch"/>
+?>
 </launch>
