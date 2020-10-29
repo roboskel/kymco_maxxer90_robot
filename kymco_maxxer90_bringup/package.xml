@@ -12,6 +12,9 @@
   <buildtool_depend>catkin</buildtool_depend>
   <depend>roscpp</depend>
   <depend>serial</depend>
+  <depend>sensor_msgs</depend>
+  <depend>geometry_msgs</depend>
+  <depend>controller_manager</depend>
   <depend>hardware_interface</depend>
 
 
