@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <package format="2">
   <name>kymco_maxxer90_bringup</name>
-  <version>0.0.1</version>
+  <version>0.0.8</version>
   <description>The kymco_maxxer90_bringup package</description>
 
   <maintainer email="gstavrinos@iit.demokritos.gr">George Stavrinos</maintainer>
@@ -12,6 +12,7 @@
   <buildtool_depend>catkin</buildtool_depend>
   <depend>roscpp</depend>
   <depend>serial</depend>
+  <depend>std_msgs</depend>
   <depend>nav_msgs</depend>
   <depend>sensor_msgs</depend>
   <depend>geometry_msgs</depend>

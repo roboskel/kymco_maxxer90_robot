@@ -6,6 +6,7 @@ add_compile_options(-std=c++11)
 find_package(catkin REQUIRED COMPONENTS
     roscpp
     serial
+    std_msgs
     nav_msgs
     sensor_msgs
     geometry_msgs
