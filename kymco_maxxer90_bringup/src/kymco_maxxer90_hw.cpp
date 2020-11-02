@@ -2,9 +2,10 @@
 
 using namespace kymco_maxxer90_motor_controller;
 
-KymcoMaxxer90MotorController::KymcoMaxxer90MotorController(const ros::NodeHandle& n, const std::string& port1, const std::string& port2, const int& baudrate1, const int& baudrate2, const std::string& device_name1, const std::string& device_name2) {
+KymcoMaxxer90MotorController::KymcoMaxxer90MotorController(const ros::NodeHandle& n, const std::string& port1, const std::string& port2, const std::string& port3, const int& baudrate1, const int& baudrate2, const int& baudrate3, const std::string& device_name1, const std::string& device_name2, const std::string& device_name3) {
 
     connectToMotorDriver(port1, port2, baudrate1, baudrate2, device_name1, device_name2);
+    serialInit(srl3, port3, baudrate3, device_name3);
 
     nh = n;
 
@@ -16,6 +17,9 @@ KymcoMaxxer90MotorController::KymcoMaxxer90MotorController(const ros::NodeHandle
     state.effort.push_back(0.0);
     state.name.push_back(THROTTLE_JOINT);
     state.name.push_back(STEERING_JOINT);
+
+    curr_steering_angle = 25;
+    target_steering_angle = 25.0;
 
     hardware_interface::JointStateHandle state_linear_x(THROTTLE_JOINT, &state.position[0], &state.velocity[0], &state.effort[0]);
     hardware_interface::JointStateHandle state_angular_z(STEERING_JOINT, &state.position[1], &state.velocity[1], &state.effort[1]);
@@ -44,11 +48,14 @@ KymcoMaxxer90MotorController::KymcoMaxxer90MotorController(const ros::NodeHandle
 
     controller_manager.reset(new controller_manager::ControllerManager(this, nh));
 
-    timer = nh.createTimer(ros::Duration(0.1), &KymcoMaxxer90MotorController::update, this);
+    update_timer = nh.createTimer(ros::Duration(0.1), &KymcoMaxxer90MotorController::update, this);
+
+    encoders_timer = nh.createTimer(ros::Duration(0.5), &KymcoMaxxer90MotorController::readEncoders, this);
 
     odom_pub = nh.advertise<nav_msgs::Odometry>("/kymco_maxxer90_motor_controller/odom", 1);
 
     cmd_vel_sub = nh.subscribe("/kymco_maxxer90_motor_controller/cmd_vel", 1, &KymcoMaxxer90MotorController::cmdVelCallback, this);
+    spray_sub = nh.subscribe("/kymco_maxxer90_motor_controller/spray_valve", 1, &KymcoMaxxer90MotorController::sprayingCallback, this);
 
 }
 
@@ -58,9 +65,17 @@ KymcoMaxxer90MotorController::~KymcoMaxxer90MotorController() {
 
 void KymcoMaxxer90MotorController::update(const ros::TimerEvent& e) {
     elapsed_time = ros::Duration(e.current_real - e.last_real);
+
+    double delta_steering = std::min(abs(target_steering_angle - curr_steering_angle), elapsed_time.toSec() * DEG_PER_SEC);
+    curr_steering_angle = target_steering_angle > curr_steering_angle ? curr_steering_angle + delta_steering : curr_steering_angle - delta_steering;
+    double centered_rad_steering = (MAX_ANGZ - MIN_ANGZ) / 2 * M_PI / 180;
+
+    state.position[1] = norm(curr_steering_angle, MIN_ANGZ, MAX_ANGZ, -centered_rad_steering, centered_rad_steering);
+
+    // TODO update joint states (only for linear, angular is now implemented)
+
     controller_manager->update(ros::Time::now(), elapsed_time);
-    // TODO read encoders from serial
-    // TODO update joint states
+
     nav_msgs::Odometry odom;
     odom.header.stamp = ros::Time::now();
     odom.header.frame_id = "odom";
@@ -75,6 +90,23 @@ void KymcoMaxxer90MotorController::update(const ros::TimerEvent& e) {
     odom.twist.twist.angular.z = 0;
 
     odom_pub.publish(odom);
+}
+
+void KymcoMaxxer90MotorController::readEncoders(const ros::TimerEvent& e) {
+    std::string response = srl3->read(9);
+    if (not response.empty()) {
+        try {
+            int encoder_reading = std::stoi(response);
+            // TODO update encoder value
+        }
+        catch (...) {
+
+        }
+    }
+}
+
+void KymcoMaxxer90MotorController::sprayingCallback(const std_msgs::Bool::ConstPtr& msg) {
+    srl3->write("CV"+std::to_string(int(msg->data)));
 }
 
 void KymcoMaxxer90MotorController::cmdVelCallback(const geometry_msgs::Twist::ConstPtr& cmd_vel) {
@@ -138,8 +170,8 @@ void KymcoMaxxer90MotorController::writeThrottleSerial(const double& x) {
 }
 
 void KymcoMaxxer90MotorController::writeSteeringSerial(const double& z) {
-    int v = norm(z, MIN_ANGZ, MAX_ANGZ, -1.0, 1.0);
-    srl1->write(STEERING_START + std::to_string(v) + STEERING_END);
+    target_steering_angle = norm(z, 1.0, -1.0, MIN_ANGZ, MAX_ANGZ);
+    srl1->write(STEERING_START + std::to_string(target_steering_angle) + STEERING_END);
 }
 
 int KymcoMaxxer90MotorController::norm(const double& v1, const double& s1, const double& e1, const double& s2, const double& e2) {
