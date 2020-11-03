@@ -147,7 +147,7 @@ void KymcoMaxxer90MotorController::serialInit(serial::Serial *srl, const std::st
 }
 
 void KymcoMaxxer90MotorController::centerSteeringWheel() {
-    srl1->write(STEERING_START + "25" + STEERING_END);
+    srl1->write(STEERING_START + std::to_string(int((MAX_ANGZ-MIN_ANGZ)/2)) + STEERING_END);
 }
 
 void KymcoMaxxer90MotorController::serialClose() {
@@ -156,6 +156,9 @@ void KymcoMaxxer90MotorController::serialClose() {
     }
     if (srl2) {
         srl2->close();
+    }
+    if (srl3) {
+        srl3->close();
     }
 }
 
