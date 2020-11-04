@@ -128,7 +128,7 @@ void KymcoMaxxer90MotorController::connectToMotorDriver(const std::string& port1
 
 }
 
-void KymcoMaxxer90MotorController::serialInit(serial::Serial *srl, const std::string& port, const int& baudrate, const std::string& device_name) {
+void KymcoMaxxer90MotorController::serialInit(serial::Serial *&srl, const std::string& port, const int& baudrate, const std::string& device_name) {
     while(ros::ok()) {
         try {
             ROS_INFO_STREAM("Looking for the " << device_name << " at port " << port);

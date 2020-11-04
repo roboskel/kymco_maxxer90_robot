@@ -30,7 +30,7 @@ static const int MAX_ANGZ = 49;
 class KymcoMaxxer90MotorController : public hardware_interface::RobotHW {
 
     public:
-        KymcoMaxxer90MotorController(const ros::NodeHandle&, const std::string& = "/dev/ttyS0", const std::string& = "/dev/ttyS1", const std::string& = "/dev/ttyACM0", const int& = 4800, const int& = 4800, const int& = 19200, const std::string& = "motor_driver", const std::string& = "motor_driver", const std::string& = "arduino");
+        KymcoMaxxer90MotorController(const ros::NodeHandle&, const std::string& = "/dev/ttyUSB1", const std::string& = "/dev/ttyUSB2", const std::string& = "/dev/ttyUSB0", const int& = 4800, const int& = 4800, const int& = 19200, const std::string& = "motor_driver", const std::string& = "motor_driver", const std::string& = "arduino");
         ~KymcoMaxxer90MotorController();
 
     private:
@@ -43,7 +43,7 @@ class KymcoMaxxer90MotorController : public hardware_interface::RobotHW {
         void sprayingCallback(const std_msgs::Bool::ConstPtr&);
         void cmdVelCallback(const geometry_msgs::Twist::ConstPtr&);
         int norm(const double&, const double&, const double&, const double&, const double&);
-        void serialInit(serial::Serial*, const std::string&, const int&, const std::string&);
+        void serialInit(serial::Serial*&, const std::string&, const int&, const std::string&);
         void connectToMotorDriver(const std::string&, const std::string&, const int&, const int&, const std::string&, const std::string&);
 
         ros::NodeHandle nh;
