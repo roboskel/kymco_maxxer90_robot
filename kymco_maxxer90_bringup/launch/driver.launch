@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+
+<launch>
+
+    <include file="$(find kymco_maxxer90_description)/launch/description.launch"/>
+
+    <rosparam command="load" file="$(find kymco_maxxer90_control)/config/ackermann_control.yaml" />
+    <node name="base_controller_spawner" pkg="controller_manager" type="spawner" args="kymco_maxxer90_joint_publisher kymco_maxxer90_ackermann_steering_controller" output="screen"/>
+    <node name="axe27_serial_fix" pkg="kymco_maxxer90_bringup" type="ftdi_sio.sh" output="screen"/>
+    <node name="kymco_maxxer90_ackermann_steering_controller" pkg="kymco_maxxer90_bringup" type="motor_controller" output="screen"/>
+
+</launch>
