@@ -73,7 +73,7 @@ class KymcoMaxxer90AckermannSteeringController : public hardware_interface::Robo
         hardware_interface::VelocityJointInterface jvel_interface;
         hardware_interface::PositionJointInterface jpos_interface;
         std::shared_ptr<controller_manager::ControllerManager> controller_manager;
-        double curr_steering_angle, target_steering_angle, linear_velocity, angular_velocity;
+        double curr_steering_angle, target_steering_angle, linear_velocity, angular_velocity, prev_l, prev_a;
 
 };
 

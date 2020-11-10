@@ -193,17 +193,23 @@ void KymcoMaxxer90AckermannSteeringController::serialClose() {
 }
 
 void KymcoMaxxer90AckermannSteeringController::writeThrottleSerial() {
-    if (linear_velocity >= 0) {
-        int v = norm(linear_velocity, MIN_VELX, MAX_VELX, 0, 1.0);
-        srl2->write(THROTTLE_START + std::to_string(v) + THROTTLE_END);
-    }
-    else {
-        ROS_WARN("Received negative X velocity value. Our robot cannot move backwards. Ignoring.");
+    if (prev_l != linear_velocity) {
+        if (linear_velocity >= 0) {
+            int v = norm(linear_velocity, MIN_VELX, MAX_VELX, 0, 1.0);
+            srl2->write(THROTTLE_START + std::to_string(v) + THROTTLE_END);
+            prev_l = linear_velocity;
+        }
+        else {
+            ROS_WARN("Received negative X velocity value. Our robot cannot move backwards. Ignoring.");
+        }
     }
 }
 
 void KymcoMaxxer90AckermannSteeringController::writeSteeringSerial() {
-    srl1->write(STEERING_START + std::to_string((int)target_steering_angle) + STEERING_END);
+    if (prev_a != target_steering_angle) {
+        srl1->write(STEERING_START + std::to_string((int)target_steering_angle) + STEERING_END);
+        prev_a = target_steering_angle;
+    }
 }
 
 double KymcoMaxxer90AckermannSteeringController::norm(const double& v1, const double& s1, const double& e1, const double& s2, const double& e2) {
