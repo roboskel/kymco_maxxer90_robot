@@ -195,7 +195,7 @@ void KymcoMaxxer90AckermannSteeringController::serialClose() {
 void KymcoMaxxer90AckermannSteeringController::writeThrottleSerial() {
     if (prev_l != linear_velocity) {
         if (linear_velocity >= 0) {
-            int v = norm(linear_velocity, MIN_VELX, MAX_VELX, 0, 1.0);
+            int v = norm(linear_velocity, MIN_VELX_MS, MAX_VELX_MS, MIN_VELX, MAX_VELX);
             srl2->write(THROTTLE_START + std::to_string(v) + THROTTLE_END);
             prev_l = linear_velocity;
         }
