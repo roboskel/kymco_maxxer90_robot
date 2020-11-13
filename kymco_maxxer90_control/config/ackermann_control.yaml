@@ -12,11 +12,13 @@ kymco_maxxer90_ackermann_steering_controller:
     cmd_vel_timeout: 0.5
     # wheel_separation_h : 0.4
     wheel_radius : 0.2286
+    wheel_separation_h: 0.97
     wheel_separation_h_multiplier: 1.0
     steer_pos_multiplier: 1.0
     base_frame_id: base_link
     odom_frame_id: odom
-    enable_odom_tf: false
+    enable_odom_tf: false #true 
+    # open_loop: true
 
     linear:
         x:
