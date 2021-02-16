@@ -14,11 +14,28 @@
 
 namespace kymco_maxxer90_ackermann_steering_controller {
 
+// NEW PROTOCOL
+static const std::string THROTTLE_START_N = "CS";
+static const std::string THROTTLE_END_N = "\n";
+static const std::string THROTTLE_INC = "I";
+static const std::string THROTTLE_DEC = "D";
+static const std::string STEERING_START_N = "CS";
+static const std::string STEERING_END_N = "\n";
+static const std::string STEERING_RIGHT = "R";
+static const std::string STEERING_LEFT = "L";
+// TODO investigate these values
+static const int MS_FROM_ZERO_TO_MAX_THROTTLE = 4000; // 4 secs
+static const int MS_FROM_MIN_TO_MAX_STEERING = 8000; // 8 secs
+// ---
+
+// OLD PROTOCOL
 static const std::string THROTTLE_START = "$SPEED,";
 static const std::string THROTTLE_END = "*11\r\n";
 static const std::string STEERING_START = "$ANGLE,";
 static const std::string STEERING_END = "*11\r\n";
 static const std::string THROTTLE_JOINT = "RWD_joint";
+// ---
+
 static const std::string STEERING_JOINT = "steering_wheel_joint";
 static const std::string FRONT_LEFT_WHEEL_JOINT = "front_left_wheel";
 static const std::string FRONT_RIGHT_WHEEL_JOINT = "front_right_wheel";
