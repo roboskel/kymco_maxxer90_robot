@@ -9,7 +9,8 @@ KymcoMaxxer90AckermannSteeringController::KymcoMaxxer90AckermannSteeringControll
     // srl2 -> Throttle
     // srl3 -> Arduino (spraying, encoders, etc)
 
-    connectToMotorDriver(port1, port2, baudrate1, baudrate2, device_name1, device_name2);
+    // OLD PROTOCOL
+    // connectToMotorDriver(port1, port2, baudrate1, baudrate2, device_name1, device_name2);
     serialInit(srl3, port3, baudrate3, device_name3);
 
     nh = n;
@@ -89,6 +90,7 @@ void KymcoMaxxer90AckermannSteeringController::update(const ros::TimerEvent& e) 
     double new_steering_pos = norm(curr_steering_angle, MIN_ANGZ, MAX_ANGZ, -CENTERED_RAD_STEERING, CENTERED_RAD_STEERING);
 
     double dx = encoder_reading * METERS_PER_ENCODER_TICK; // m
+    // double dx = linear_velocity * METERS_PER_ENCODER_TICK; // m
 
     // double new_throttle_pos = dx != 0 ? (2 * M_PI) / (dx / WHEEL_CIRCUMFERENCE) : 0; // rad
 
@@ -195,8 +197,16 @@ void KymcoMaxxer90AckermannSteeringController::serialClose() {
 void KymcoMaxxer90AckermannSteeringController::writeThrottleSerial() {
     if (prev_l != linear_velocity) {
         if (linear_velocity >= 0) {
-            int v = norm(linear_velocity, MIN_VELX_MS, MAX_VELX_MS, MIN_VELX, MAX_VELX);
-            srl2->write(THROTTLE_START + std::to_string(v) + THROTTLE_END);
+            // OLD PROTOCOL
+            // int v = norm(linear_velocity, MIN_VELX_MS, MAX_VELX_MS, MIN_VELX, MAX_VELX);
+            // srl2->write(THROTTLE_START + std::to_string(v) + THROTTLE_END);
+
+            // NEW PROTOCOL
+            int c = (linear_velocity - state.velocity[0]) / MS_FROM_MIN_TO_MAX_STEERING;
+            std::string command = c > 0 ? THROTTLE_START_N + THROTTLE_INC : THROTTLE_START_N + THROTTLE_DEC;
+            command += std::to_string(abs(c)) + STEERING_END_N;
+            srl3->write(command);
+            // ---
             prev_l = linear_velocity;
         }
         else {
@@ -207,7 +217,15 @@ void KymcoMaxxer90AckermannSteeringController::writeThrottleSerial() {
 
 void KymcoMaxxer90AckermannSteeringController::writeSteeringSerial() {
     if (prev_a != target_steering_angle) {
-        srl1->write(STEERING_START + std::to_string((int)target_steering_angle) + STEERING_END);
+        // OLD PROTOCOL
+        // srl1->write(STEERING_START + std::to_string((int)target_steering_angle) + STEERING_END);
+
+        // NEW PROTOCOL
+        int c = (target_steering_angle - state.position[1]) / MS_FROM_MIN_TO_MAX_STEERING;
+        std::string command = c > 0 ? STEERING_START_N + STEERING_LEFT : STEERING_START_N + STEERING_RIGHT;
+        command += std::to_string(abs(c)) + STEERING_END_N;
+        srl3->write(command);
+        // ---
         prev_a = target_steering_angle;
     }
 }
