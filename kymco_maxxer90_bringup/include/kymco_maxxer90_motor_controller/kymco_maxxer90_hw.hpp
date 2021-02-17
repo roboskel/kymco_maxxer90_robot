@@ -72,6 +72,7 @@ class KymcoMaxxer90AckermannSteeringController : public hardware_interface::Robo
         void centerSteeringWheel();
         void writeThrottleSerial();
         void writeSteeringSerial();
+        void newProtocolActuatorsReset();
         void update(const ros::TimerEvent&);
         void readEncoders(const ros::TimerEvent&);
         void sprayingCallback(const std_msgs::Bool::ConstPtr&);
@@ -82,6 +83,7 @@ class KymcoMaxxer90AckermannSteeringController : public hardware_interface::Robo
         ros::NodeHandle nh;
         int encoder_reading;
         ros::Subscriber spray_sub;
+        int throttle_m, steering_m;
         sensor_msgs::JointState state;
         ros::Time last_encoder_reading;
         serial::Serial *srl1, *srl2, *srl3;
@@ -92,6 +94,7 @@ class KymcoMaxxer90AckermannSteeringController : public hardware_interface::Robo
         hardware_interface::VelocityJointInterface jvel_interface;
         hardware_interface::PositionJointInterface jpos_interface;
         std::shared_ptr<controller_manager::ControllerManager> controller_manager;
+        float throttle_actuator_pos, steering_actuator_pos, target_tap, target_sap;
         double curr_steering_angle, target_steering_angle, linear_velocity, angular_velocity, prev_l, prev_a;
 
 };
