@@ -16,16 +16,15 @@ namespace kymco_maxxer90_ackermann_steering_controller {
 
 // NEW PROTOCOL
 static const std::string THROTTLE_START_N = "CS";
-static const std::string THROTTLE_END_N = "\n";
+static const std::string THROTTLE_END_N = "";
 static const std::string THROTTLE_INC = "I";
 static const std::string THROTTLE_DEC = "D";
 static const std::string STEERING_START_N = "CS";
-static const std::string STEERING_END_N = "\n";
+static const std::string STEERING_END_N = "";
 static const std::string STEERING_RIGHT = "R";
 static const std::string STEERING_LEFT = "L";
-// TODO investigate these values
-static const int MS_FROM_ZERO_TO_MAX_THROTTLE = 4000; // 4 secs
-static const int MS_FROM_MIN_TO_MAX_STEERING = 8000; // 8 secs
+static const int MS_FROM_ZERO_TO_MAX_THROTTLE = 9500; // 9.5 secs
+static const int MS_FROM_MIN_TO_MAX_STEERING = 9000; // 9 secs
 // ---
 
 // OLD PROTOCOL
@@ -52,7 +51,8 @@ static const int  MAX_VELX = 9;
 static const int MIN_ANGZ = 0;
 static const int MAX_ANGZ = 49;
 static const double MIN_VELX_MS = 0;
-static const double MAX_VELX_MS = 6.1;
+//static const double MAX_VELX_MS = 6.1;
+static const double MAX_VELX_MS = 4.3;
 static const double WHEEL_DIAMETER = 0.4572; //m
 static const double METERS_PER_ENCODER_TICK = 1.f/39.f; // 39 ticks per meter
 static const double DEG_PER_SEC = (MAX_ANGZ-MIN_ANGZ+1)/2.f;
@@ -63,7 +63,7 @@ static const double CENTERED_RAD_STEERING = int((MAX_ANGZ - MIN_ANGZ) / 2.f) * M
 class KymcoMaxxer90AckermannSteeringController : public hardware_interface::RobotHW {
 
     public:
-        KymcoMaxxer90AckermannSteeringController(const ros::NodeHandle&, const std::string& = "/dev/ttyUSB1", const std::string& = "/dev/ttyUSB2", const std::string& = "/dev/ttyUSB0", const int& = 4800, const int& = 4800, const int& = 19200, const std::string& = "motor_driver", const std::string& = "motor_driver", const std::string& = "arduino");
+        KymcoMaxxer90AckermannSteeringController(const ros::NodeHandle&, const std::string& = "/dev/ttyUSB1", const std::string& = "/dev/ttyUSB2", const std::string& = "/dev/ttyUSB0", const int& = 4800, const int& = 4800, const int& = 57600, const std::string& = "motor_driver", const std::string& = "motor_driver", const std::string& = "arduino");
         ~KymcoMaxxer90AckermannSteeringController();
 
     private:
