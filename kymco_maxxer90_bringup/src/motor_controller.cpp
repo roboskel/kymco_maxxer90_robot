@@ -12,7 +12,7 @@ int main(int argc, char** argv) {
     nh.param("kymco_maxxer90_ackermann_steering_controller/port3", port3, std::string("/dev/ttyUSB0"));
     nh.param("kymco_maxxer90_ackermann_steering_controller/baudrate1", baudrate1, 4800);
     nh.param("kymco_maxxer90_ackermann_steering_controller/baudrate2", baudrate2, 4800);
-    nh.param("kymco_maxxer90_ackermann_steering_controller/baudrate3", baudrate3, 19200);
+    nh.param("kymco_maxxer90_ackermann_steering_controller/baudrate3", baudrate3, 57600);
 
     ros::MultiThreadedSpinner spinner(3);
 
