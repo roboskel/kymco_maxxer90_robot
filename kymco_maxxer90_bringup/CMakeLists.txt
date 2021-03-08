@@ -24,6 +24,8 @@ include_directories(
     ${catkin_INCLUDE_DIRS}
 )
 
-add_executable(motor_controller src/motor_controller.cpp src/kymco_maxxer90_hw.cpp)
-target_link_libraries(motor_controller ${catkin_LIBRARIES})
+add_executable(motor_controller_old src/motor_controller.cpp src/kymco_maxxer90_hw.cpp)
+target_link_libraries(motor_controller_old ${catkin_LIBRARIES})
 
+add_executable(motor_controller src/motor_controller2.cpp src/kymco_maxxer90_hw2.cpp)
+target_link_libraries(motor_controller ${catkin_LIBRARIES})
