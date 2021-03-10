@@ -128,7 +128,7 @@ void KymcoMaxxer90AckermannSteeringController::update(const ros::TimerEvent& e) 
 
 void KymcoMaxxer90AckermannSteeringController::readEncoders(const ros::TimerEvent& e) {
     try {
-        std::string response = srl3->read(9);
+        std::string response = srl3->read(256);
         if (not response.empty()) {
             encoder_reading = std::stoi(response);
             ros::Time t = ros::Time::now();
@@ -141,7 +141,7 @@ void KymcoMaxxer90AckermannSteeringController::readEncoders(const ros::TimerEven
 
 void KymcoMaxxer90AckermannSteeringController::throttleFeedback(const ros::TimerEvent& e) {
     try {
-        std::string response = srl2->read(9);
+        std::string response = srl2->read(256);
         if (not response.empty()) {
             throttle_reading = std::stoi(response);
         }
@@ -151,7 +151,7 @@ void KymcoMaxxer90AckermannSteeringController::throttleFeedback(const ros::Timer
 
 void KymcoMaxxer90AckermannSteeringController::steeringFeedback(const ros::TimerEvent& e) {
     try {
-        std::string response = srl1->read(9);
+        std::string response = srl1->read(256);
         if (not response.empty()) {
             steering_reading = std::stoi(response);
         }
@@ -174,11 +174,14 @@ void KymcoMaxxer90AckermannSteeringController::actuatorsReset() {
     throttle_actuator_pos = 0.0;
     steering_actuator_pos = 0.5;
     std::string command = THROTTLE_START_N + THROTTLE_DEC + std::to_string(MS_FROM_ZERO_TO_MAX_THROTTLE) + THROTTLE_END_N;
+    ROS_WARN_STREAM(command);
     srl2->write(command);
     command = STEERING_START_N + STEERING_LEFT + std::to_string(MS_FROM_MIN_TO_MAX_STEERING) + STEERING_END_N;
+    ROS_WARN_STREAM(command);
     srl1->write(command);
     command = STEERING_START_N + STEERING_RIGHT + std::to_string(MS_FROM_MIN_TO_MAX_STEERING/2) + STEERING_END_N;
     srl1->write(command);
+    ROS_WARN_STREAM(command);
     ros::Duration(std::max(MS_FROM_MIN_TO_MAX_STEERING, MS_FROM_ZERO_TO_MAX_THROTTLE)/1000.f).sleep();
 }
 
