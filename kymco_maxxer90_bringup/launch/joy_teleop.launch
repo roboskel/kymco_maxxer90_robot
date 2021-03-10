@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<launch>
+
+  <group ns="joy_teleop">
+
+    <rosparam command="load" file="$(find kymco_maxxer90_bringup)/config/teleop.yaml" />
+
+    <node pkg="joy" type="joy_node" name="joy_node"/>
+
+    <node pkg="teleop_twist_joy" type="teleop_node" name="teleop_twist_joy"/>
+  </group>
+
+</launch>
