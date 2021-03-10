@@ -69,15 +69,17 @@ KymcoMaxxer90AckermannSteeringController::KymcoMaxxer90AckermannSteeringControll
 
     controller_manager.reset(new controller_manager::ControllerManager(this, nh));
 
-    update_timer = nh.createTimer(ros::Duration(0.02), &KymcoMaxxer90AckermannSteeringController::update, this);
+    update_timer = nh.createTimer(ros::Duration(0.3), &KymcoMaxxer90AckermannSteeringController::update, this);
 
-    encoders_timer = nh.createTimer(ros::Duration(0.1), &KymcoMaxxer90AckermannSteeringController::readEncoders, this);
+    encoders_timer = nh.createTimer(ros::Duration(0.5), &KymcoMaxxer90AckermannSteeringController::readEncoders, this);
 
     throttle_feedback_timer = nh.createTimer(ros::Duration(0.1), &KymcoMaxxer90AckermannSteeringController::throttleFeedback, this);
 
     steering_feedback_timer = nh.createTimer(ros::Duration(0.1), &KymcoMaxxer90AckermannSteeringController::steeringFeedback, this);
 
     spray_sub = nh.subscribe("/kymco_maxxer90_ackermann_steering_controller/spray_valve", 1, &KymcoMaxxer90AckermannSteeringController::sprayingCallback, this);
+
+    ROS_INFO("The controller is ready!");
 
 }
 
@@ -88,8 +90,8 @@ KymcoMaxxer90AckermannSteeringController::~KymcoMaxxer90AckermannSteeringControl
 void KymcoMaxxer90AckermannSteeringController::update(const ros::TimerEvent& e) {
     elapsed_time = ros::Duration(e.current_real - e.last_real);
 
-    steering_actuator_pos = steering_actuator_pos != target_sap ? std::max(0.0, std::min(double(target_sap - steering_reading * steering_m) / MS_FROM_MIN_TO_MAX_STEERING, 1.0)) : steering_actuator_pos;
-    throttle_actuator_pos = throttle_actuator_pos != target_tap ? std::max(0.0, std::min(double(target_tap - throttle_reading * throttle_m) / MS_FROM_ZERO_TO_MAX_THROTTLE, 1.0)) : throttle_actuator_pos;
+    steering_actuator_pos = steering_actuator_pos != target_sap ? std::max(0.0, std::min(target_sap - double(steering_reading * steering_m) / MS_FROM_MIN_TO_MAX_STEERING, 1.0)) : steering_actuator_pos;
+    throttle_actuator_pos = throttle_actuator_pos != target_tap ? std::max(0.0, std::min(target_tap - double(throttle_reading * throttle_m) / MS_FROM_ZERO_TO_MAX_THROTTLE, 1.0)) : std::max(0.f, std::min(1.f, throttle_actuator_pos));
 
     target_steering_angle = norm(angular_velocity, 1.0, -1.0, MIN_ANGZ, MAX_ANGZ);
 
@@ -98,7 +100,10 @@ void KymcoMaxxer90AckermannSteeringController::update(const ros::TimerEvent& e) 
 
     double new_steering_pos = norm(curr_steering_angle, MIN_ANGZ, MAX_ANGZ, -CENTERED_RAD_STEERING, CENTERED_RAD_STEERING);
 
-    double dx = encoder_reading * METERS_PER_ENCODER_TICK; // m
+    // Encoder is dead...
+    // double dx = encoder_reading * METERS_PER_ENCODER_TICK; // m
+    
+    double dx = throttle_actuator_pos * MAX_VELX * elapsed_time.toSec(); // m
 
     // NOTE: Even though joints are documented to be measured in rad and rad/s for position and velocity
     // respectively, ackermann_steering_controller expects m and m/s (!)
@@ -141,20 +146,34 @@ void KymcoMaxxer90AckermannSteeringController::readEncoders(const ros::TimerEven
 
 void KymcoMaxxer90AckermannSteeringController::throttleFeedback(const ros::TimerEvent& e) {
     try {
-        std::string response = srl2->read(256);
-        if (not response.empty()) {
-            throttle_reading = std::stoi(response);
-        }
+	if (srl2->available()) {
+	    srl2->flushInput();
+	    std::string response = srl2->read(4);
+	    ROS_ERROR(std::string("t = " + response).c_str());
+	    if (not response.empty()) {
+ 	        throttle_reading = std::stoi(response);
+	    }
+	    else {
+	        throttle_reading = 0;
+	    }
+	}
     }
     catch (...) {}
 }
 
 void KymcoMaxxer90AckermannSteeringController::steeringFeedback(const ros::TimerEvent& e) {
     try {
-        std::string response = srl1->read(256);
-        if (not response.empty()) {
-            steering_reading = std::stoi(response);
-        }
+	if (srl1->available()) {
+	    srl1->flushInput();
+	    std::string response = srl1->read(4);
+	    ROS_ERROR(std::string("s = " + response).c_str());
+	    if (not response.empty()) {
+ 	        steering_reading = std::stoi(response);
+	    }
+	    else {
+	        steering_reading = 0;
+	    }
+	}
     }
     catch (...) {}
 }
@@ -174,15 +193,16 @@ void KymcoMaxxer90AckermannSteeringController::actuatorsReset() {
     throttle_actuator_pos = 0.0;
     steering_actuator_pos = 0.5;
     std::string command = THROTTLE_START_N + THROTTLE_DEC + std::to_string(MS_FROM_ZERO_TO_MAX_THROTTLE) + THROTTLE_END_N;
-    ROS_WARN_STREAM(command);
+    ROS_WARN(command.c_str());
     srl2->write(command);
     command = STEERING_START_N + STEERING_LEFT + std::to_string(MS_FROM_MIN_TO_MAX_STEERING) + STEERING_END_N;
-    ROS_WARN_STREAM(command);
+    ROS_WARN(command.c_str());
     srl1->write(command);
+    ros::Duration(MS_FROM_MIN_TO_MAX_STEERING/1000.f).sleep();
     command = STEERING_START_N + STEERING_RIGHT + std::to_string(MS_FROM_MIN_TO_MAX_STEERING/2) + STEERING_END_N;
+    ROS_WARN(command.c_str());
     srl1->write(command);
-    ROS_WARN_STREAM(command);
-    ros::Duration(std::max(MS_FROM_MIN_TO_MAX_STEERING, MS_FROM_ZERO_TO_MAX_THROTTLE)/1000.f).sleep();
+    ros::Duration(std::abs(MS_FROM_MIN_TO_MAX_STEERING/2 - MS_FROM_ZERO_TO_MAX_THROTTLE)/1000.f).sleep();
 }
 
 void KymcoMaxxer90AckermannSteeringController::discoverDevices(std::vector<std::string> ports,  const int baudrate) {
@@ -194,7 +214,6 @@ void KymcoMaxxer90AckermannSteeringController::discoverDevices(std::vector<std::
                 serialInit(srl1, ports[i], baudrate, "steering controller");
                 srl1->write(STEERING_START_N + STEERING_LEFT + "0" + STEERING_END_N);
                 std::string response = srl1->read(256);
-		ROS_ERROR_STREAM(response);
                 if (response.find("OK") < response.length()) {
                     ROS_INFO_STREAM("Found steering controller in port " + ports[i]);
                     ports.erase(ports.begin() + i);
@@ -206,7 +225,6 @@ void KymcoMaxxer90AckermannSteeringController::discoverDevices(std::vector<std::
                 serialInit(srl2, ports[i], baudrate, "throttle controller");
                 srl2->write(THROTTLE_START_N + THROTTLE_DEC + "0" + THROTTLE_END_N);
                 std::string response = srl2->read(256);
-		ROS_ERROR_STREAM(response);
                 if (response.find("OK") < response.length()) {
                     ROS_INFO_STREAM("Found throttle controller in port " + ports[i]);
                     ports.erase(ports.begin() + i);
@@ -261,8 +279,19 @@ void KymcoMaxxer90AckermannSteeringController::writeThrottleSerial() {
             std::string command = c > 0 ? THROTTLE_START_N + THROTTLE_INC : THROTTLE_START_N + THROTTLE_DEC;
             throttle_m = c > 0 ? 1 : -1;
             throttle_command = abs(c);
+	    // When we want to stop, bypass the regular calculations
+	    // to (just correct and not reset with the current +=300 hack)
+	    // reset the drift that is included in the inaccurate measurements
+	    if (target_tap == 0) {
+	        // throttle_command = MS_FROM_ZERO_TO_MAX_THROTTLE;
+	        throttle_command += 300;
+	    }
             command += std::to_string(throttle_command) + THROTTLE_END_N;
-            srl3->write(command);
+            srl2->write(command);
+	    ROS_INFO(std::to_string(target_tap).c_str());
+	    ROS_INFO(std::to_string(throttle_actuator_pos).c_str());
+	    ROS_WARN(std::to_string(linear_velocity).c_str());
+	    ROS_ERROR(command.c_str());
             prev_l = linear_velocity;
         }
         else {
@@ -273,13 +302,13 @@ void KymcoMaxxer90AckermannSteeringController::writeThrottleSerial() {
 
 void KymcoMaxxer90AckermannSteeringController::writeSteeringSerial() {
     if (prev_a != target_steering_angle) {
-        target_sap = norm(target_steering_angle, 1.0, -1.0, 0.0, 1.0);
-        int c = (target_sap - steering_actuator_pos) / MS_FROM_MIN_TO_MAX_STEERING;
+        target_sap = norm(target_steering_angle, MIN_ANGZ, MAX_ANGZ, 0.0, 1.0);
+	int c = (target_sap - steering_actuator_pos) * MS_FROM_MIN_TO_MAX_STEERING;
         std::string command = c > 0 ? STEERING_START_N + STEERING_RIGHT : STEERING_START_N + STEERING_LEFT;
         steering_m = c > 0 ? 1 : -1;
         steering_command = abs(c);
         command += std::to_string(steering_command) + STEERING_END_N;
-        srl3->write(command);
+        srl1->write(command);
         prev_a = target_steering_angle;
     }
 }
