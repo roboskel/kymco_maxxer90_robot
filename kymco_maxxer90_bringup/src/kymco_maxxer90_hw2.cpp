@@ -190,7 +190,8 @@ void KymcoMaxxer90AckermannSteeringController::discoverDevices(std::vector<std::
             if (ports.size() == 3) {
                 serialInit(srl1, ports[i], baudrate, "steering controller");
                 srl1->write(STEERING_START_N + STEERING_LEFT + "0" + STEERING_END_N);
-                std::string response = srl1->read(9);
+                std::string response = srl1->read(256);
+		ROS_ERROR_STREAM(response);
                 if (response.find("OK") < response.length()) {
                     ROS_INFO_STREAM("Found steering controller in port " + ports[i]);
                     ports.erase(ports.begin() + i);
@@ -201,7 +202,8 @@ void KymcoMaxxer90AckermannSteeringController::discoverDevices(std::vector<std::
             else if (ports.size() == 2) {
                 serialInit(srl2, ports[i], baudrate, "throttle controller");
                 srl2->write(THROTTLE_START_N + THROTTLE_DEC + "0" + THROTTLE_END_N);
-                std::string response = srl1->read(9);
+                std::string response = srl2->read(256);
+		ROS_ERROR_STREAM(response);
                 if (response.find("OK") < response.length()) {
                     ROS_INFO_STREAM("Found throttle controller in port " + ports[i]);
                     ports.erase(ports.begin() + i);
@@ -211,7 +213,7 @@ void KymcoMaxxer90AckermannSteeringController::discoverDevices(std::vector<std::
             // And assign the remaining port to the misc. controller
             else {
                 serialInit(srl3, ports[0], baudrate, "misc. controller");
-                ROS_INFO_STREAM("Found throttle controller in port " + ports[0]);
+                ROS_INFO_STREAM("Found misc. controller in port " + ports[0]);
                 ports.clear();
             }
         }
