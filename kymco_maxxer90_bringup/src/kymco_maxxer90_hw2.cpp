@@ -90,15 +90,9 @@ KymcoMaxxer90AckermannSteeringController::~KymcoMaxxer90AckermannSteeringControl
 void KymcoMaxxer90AckermannSteeringController::update(const ros::TimerEvent& e) {
     elapsed_time = ros::Duration(e.current_real - e.last_real);
 
-    // steering_actuator_pos = steering_actuator_pos != target_sap ? std::max(0.0, std::min(target_sap - double(steering_reading * steering_m) / MS_FROM_MIN_TO_MAX_STEERING, 1.0)) : steering_actuator_pos;
-    // throttle_actuator_pos = throttle_actuator_pos != target_tap ? std::max(0.0, std::min(target_tap - double(throttle_reading * throttle_m) / MS_FROM_ZERO_TO_MAX_THROTTLE, 1.0)) : std::max(0.f, std::min(1.f, throttle_actuator_pos));
-
     target_steering_angle = norm(angular_velocity, 1.0, -1.0, MIN_ANGZ, MAX_ANGZ);
 
-    double delta_steering = std::min(abs(target_steering_angle - curr_steering_angle), elapsed_time.toSec() * DEG_PER_SEC);
-    curr_steering_angle = target_steering_angle > curr_steering_angle ? curr_steering_angle + delta_steering : curr_steering_angle - delta_steering;
-
-    double new_steering_pos = norm(curr_steering_angle, MIN_ANGZ, MAX_ANGZ, -CENTERED_RAD_STEERING, CENTERED_RAD_STEERING);
+    double new_steering_pos = norm(steering_actuator_pos, 0.0, 1.0, CENTERED_RAD_STEERING, -CENTERED_RAD_STEERING);
 
     // Encoder is dead...
     // double dx = encoder_reading * METERS_PER_ENCODER_TICK; // m
@@ -274,19 +268,6 @@ void KymcoMaxxer90AckermannSteeringController::serialClose() {
 void KymcoMaxxer90AckermannSteeringController::writeThrottleSerial() {
     if (prev_l != linear_velocity) {
         if (linear_velocity >= 0) {
-            target_tap = norm(linear_velocity, MIN_VELX_MS, MAX_VELX_MS, 0.0, 1.0);
-            // int c = (target_tap - throttle_actuator_pos) * MS_FROM_ZERO_TO_MAX_THROTTLE;
-            // std::string command = c > 0 ? THROTTLE_START_N + THROTTLE_INC : THROTTLE_START_N + THROTTLE_DEC;
-            // throttle_m = c > 0 ? 1 : -1;
-            // throttle_command = abs(c);
-            // // When we want to stop, bypass the regular calculations
-            // // to (just correct and not reset with the current +=300 hack)
-            // // reset the drift that is included in the inaccurate measurements
-            // if (target_tap == 0) {
-                // // throttle_command = MS_FROM_ZERO_TO_MAX_THROTTLE;
-                // throttle_command += 300;
-            // }
-            // command += std::to_string(throttle_command) + THROTTLE_END_N;
             target_tap = norm(linear_velocity, MIN_VELX_MS, MAX_VELX_MS, 0.0, 0.5);
             if (target_tap != throttle_actuator_pos) {
                 throttle_m = target_tap < throttle_actuator_pos ? 1 : -1;
@@ -308,10 +289,6 @@ void KymcoMaxxer90AckermannSteeringController::writeThrottleSerial() {
 void KymcoMaxxer90AckermannSteeringController::writeSteeringSerial() {
     if (prev_a != target_steering_angle) {
         target_sap = norm(target_steering_angle, MIN_ANGZ, MAX_ANGZ, 0.0, 1.0);
-        // int c = (target_sap - steering_actuator_pos) * MS_FROM_MIN_TO_MAX_STEERING;
-        // std::string command = c > 0 ? STEERING_START_N + STEERING_RIGHT : STEERING_START_N + STEERING_LEFT;
-        // steering_m = c > 0 ? 1 : -1;
-        // steering_command = abs(c);
         if (target_sap != steering_actuator_pos) {
             steering_m = target_sap < steering_actuator_pos ? 1 : -1;
             steering_actuator_pos -= 200.0 / MS_FROM_MIN_TO_MAX_STEERING * steering_m;
