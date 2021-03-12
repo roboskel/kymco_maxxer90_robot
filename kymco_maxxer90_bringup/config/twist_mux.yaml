@@ -4,9 +4,13 @@ topics:
   timeout : 0.5
   priority: 10
 - name    : autonomy
-  topic   : /kymco_maxxer90_ackermann_steering_controller/cmd_vel
+  topic   : /move_base/cmd_vel
   timeout : 0.5
   priority: 2
+# - name    : autonomy
+  # topic   : /kymco_maxxer90_ackermann_steering_controller/cmd_vel
+  # timeout : 0.5
+  # priority: 2
 - name    : external
   topic   : cmd_vel
   timeout : 0.5

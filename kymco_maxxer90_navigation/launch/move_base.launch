@@ -26,6 +26,7 @@
         <!--<param name="SBPLLatticePlanner/primitive_filename" value="$(find kymco_maxxer90_navigation)/motion_primitives/alt/ackermann_julia.mprim" />-->
 
         <!-- CMD Topic -->
-        <remap from="cmd_vel" to="kymco_maxxer90_ackermann_steering_controller/cmd_vel" />
+        <!-- <remap from="cmd_vel" to="kymco_maxxer90_ackermann_steering_controller/cmd_vel" /> -->
+        <remap from="cmd_vel" to="move_base/cmd_vel" />
     </node>
 </launch>
