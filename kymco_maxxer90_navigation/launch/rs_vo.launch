@@ -2,7 +2,7 @@
 <launch>
     <arg name="offline"          default="false"/>
     <include unless="$(arg offline)" 
-        file="$(find realsense2_camera)/launch/rs_camera.launch">
+        file="$(find kymco_maxxer90_bringup)/launch/rs_camera.launch">
         <arg name="align_depth" value="true"/>
         <arg name="linear_accel_cov" value="1.0"/>
         <arg name="unite_imu_method" value="linear_interpolation"/>
@@ -17,10 +17,12 @@
 
     <include file="$(find rtabmap_ros)/launch/rtabmap.launch">
         <arg name="args" value="--delete_db_on_start /rtabmap/proj_map:=/map"/>
+        <!-- <arg name="localization" value="true"/> -->
         <arg name="rgb_topic" value="/camera/color/image_raw"/>
         <arg name="depth_topic" value="/camera/aligned_depth_to_color/image_raw"/>
         <arg name="camera_info_topic" value="/camera/color/camera_info"/>
         <arg name="depth_camera_info_topic" value="/camera/depth/camera_info"/>
+        <arg name="frame_id" value="base_link"/>
         <arg name="rtabmapviz" value="false"/>
         <arg name="rviz" value="false"/>
     </include>
