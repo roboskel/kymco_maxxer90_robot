@@ -269,6 +269,8 @@ void KymcoMaxxer90AckermannSteeringController::writeThrottleSerial() {
     if (prev_l != linear_velocity) {
         if (linear_velocity >= 0) {
             target_tap = norm(linear_velocity, MIN_VELX_MS, MAX_VELX_MS, 0.0, 0.5);
+            // hack for autonomous (and generally smoother?) navigation
+            target_tap = linear_velocity != 0 and target_tap < 0.4 ? 0.4 : target_tap;
             if (target_tap != throttle_actuator_pos) {
                 throttle_m = target_tap < throttle_actuator_pos ? 1 : -1;
                 throttle_actuator_pos -= 200.0 / MS_FROM_ZERO_TO_MAX_THROTTLE * throttle_m;
@@ -289,6 +291,10 @@ void KymcoMaxxer90AckermannSteeringController::writeThrottleSerial() {
 void KymcoMaxxer90AckermannSteeringController::writeSteeringSerial() {
     if (prev_a != target_steering_angle) {
         target_sap = norm(target_steering_angle, MIN_ANGZ, MAX_ANGZ, 0.0, 1.0);
+        // hack for autonomous (and generally smoother?) navigation
+        if (target_sap != 0.5) {
+            target_sap = target_sap < 0.5 ? 0.0 : 1.0;
+        }
         if (target_sap != steering_actuator_pos) {
             steering_m = target_sap < steering_actuator_pos ? 1 : -1;
             steering_actuator_pos -= 200.0 / MS_FROM_MIN_TO_MAX_STEERING * steering_m;
