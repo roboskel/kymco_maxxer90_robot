@@ -1,0 +1,9 @@
+<?xml version="1.0"?> 
+
+<launch>
+    <include file="$(find kymco_maxxer90_bringup)/launch/joy_teleop.launch"/>
+    <include file="$(find kymco_maxxer90_bringup)/launch/driver.launch"/>
+    <include file="$(find kymco_maxxer90_navigation)/launch/move_base.launch"/>
+    <include file="$(find kymco_maxxer90_navigation)/launch/rs_vo.launch"/>
+</launch>
+
