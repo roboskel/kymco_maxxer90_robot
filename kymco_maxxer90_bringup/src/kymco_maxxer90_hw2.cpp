@@ -292,9 +292,9 @@ void KymcoMaxxer90AckermannSteeringController::writeSteeringSerial() {
     if (prev_a != target_steering_angle) {
         target_sap = norm(target_steering_angle, MIN_ANGZ, MAX_ANGZ, 0.0, 1.0);
         // hack for autonomous (and generally smoother?) navigation
-        if (target_sap != 0.5) {
-            target_sap = target_sap < 0.5 ? 0.0 : 1.0;
-        }
+        // if (target_sap != 0.5) {
+            // target_sap = target_sap < 0.5 ? 0.0 : 1.0;
+        // }
         if (target_sap != steering_actuator_pos) {
             steering_m = target_sap < steering_actuator_pos ? 1 : -1;
             steering_actuator_pos -= 200.0 / MS_FROM_MIN_TO_MAX_STEERING * steering_m;
