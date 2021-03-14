@@ -6,6 +6,7 @@ from nav_msgs.msg import Path
 from nav_msgs.msg import Odometry
 from geometry_msgs.msg import Twist
 
+path_sub = None
 robot_goal = None
 cmd_vel_pub = None
 
@@ -18,6 +19,11 @@ xy_tolerance = 0.2
 max_trans_vel = 0.7
 min_trans_vel = 0.35
 
+def cmdVelFor(tw, tm):
+    for i in range(0, int(tm*1000), 100):
+        cmd_vel_pub.publish(tw)
+        rospy.sleep(0.1)
+
 def lookAt(robotx, roboty, goalx, goaly):
     dx = goalx - robotx
     dy = goaly - roboty
@@ -28,11 +34,53 @@ def distance(x1, y1, x2, y2):
 
 def path_callback(path):
     global robot_goal, stairway_to_heaven
+    global path_sub
+    path_sub.unregister()
     stairway_to_heaven = path.poses
     #  if len(path.poses) > 10:
         #  robot_goal = path.poses[10].pose
     #  else:
         #  robot_goal = None
+    prev = stairway_to_heaven[0]
+    prev_yaw = lookAt(prev.pose.position.x, prev.pose.position.y, stairway_to_heaven[-1].pose.position.x, stairway_to_heaven[-1].pose.position.y)
+    twist = Twist()
+    # Stop everything (reset)
+    print("Resetting steering and throttle actuators")
+    cmdVelFor(twist, 4)
+    print("Trying to achieve nominal throttle for actual movement...")
+    twist.linear.x = 0.35
+    cmdVelFor(twist, 3)
+    for i in range(0, len(stairway_to_heaven), 10):
+        velx = 0.3
+        angz = 0.0
+        tm = 0.1
+        p = stairway_to_heaven[i]
+        curr_yaw = lookAt(p.pose.position.x, p.pose.position.y, stairway_to_heaven[-1].pose.position.x, stairway_to_heaven[-1].pose.position.y)
+        yaw_diff = prev_yaw - curr_yaw
+        print(yaw_diff)
+        angz = -yaw_diff * 50
+
+        tm += abs(angz) * 2
+        if abs(yaw_diff) > 0.1:
+            print("Detected the need for a sharp turn, deccelerating fully")
+            velx = 0
+            angz = 0.5 * yaw_diff / abs(yaw_diff)
+
+
+
+        twist.linear.x = velx
+        twist.angular.z = angz
+        cmdVelFor(twist, tm)
+
+
+        prev = p
+        prev_yaw = curr_yaw
+    twist = Twist()
+    cmdVelFor(twist, 100)
+    path_sub = rospy.Subscriber("/move_base/SBPLLatticePlanner/plan", Path, path_callback)
+
+
+
 
 def odom_callback(odom):
     global robot_goal, prev_odom, prev_twist
@@ -80,7 +128,7 @@ def odom_callback(odom):
     prev_twist = twist
 
 def init():
-    global cmd_vel_pub
+    global cmd_vel_pub, path_sub
     global max_trans_vel, min_trans_vel
     global  xy_tolerance
     rospy.init_node("insanity_local_planner")
@@ -92,10 +140,11 @@ def init():
     xy_tolerance = rospy.get_param("~xy_tolerance", 0.4)
 
     cmd_vel_pub = rospy.Publisher("insanity/cmd_vel", Twist, queue_size=1)
-    rospy.Subscriber("/move_base/SBPLLatticePlanner/plan", Path, path_callback)
-    rospy.Subscriber("/odometry/filtered", Odometry, odom_callback)
+    path_sub = rospy.Subscriber("/move_base/SBPLLatticePlanner/plan", Path, path_callback)
+    #  rospy.Subscriber("/odometry/filtered", Odometry, odom_callback)
 
     while not rospy.is_shutdown():
         rospy.spin()
 
 init()
+
