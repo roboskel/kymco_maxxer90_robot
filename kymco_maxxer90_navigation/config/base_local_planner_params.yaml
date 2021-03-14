@@ -10,11 +10,12 @@ TebLocalPlannerROS:
     max_samples: 500
     global_plan_overwrite_orientation: True
     allow_init_with_backwards_motion: False # no backwards motion allowed
-    max_global_plan_lookahead_dist: 3.0
+    max_global_plan_lookahead_dist: 0.0
+    force_reinit_new_goal_dist: 100
     global_plan_viapoint_sep: -1
-    global_plan_prune_distance: 1
+    global_plan_prune_distance: 10
     exact_arc_length: False
-    feasibility_check_no_poses: 2
+    feasibility_check_no_poses: 20
     publish_feedback: False
 
     # Robot
@@ -22,13 +23,13 @@ TebLocalPlannerROS:
     # NOTE We can't go backwards, that's why we enforce going only forward
     # by setting weight_kinematics_forward_drive to a very high value
     max_vel_x: 6.1
-    max_vel_x_backwards: 0.06 # should be > penalty_epsilon
-    acc_lim_x: 3.0
+    max_vel_x_backwards: 0.666 # should be > penalty_epsilon
+    acc_lim_x: 1.3
 
     # TODO
-    max_vel_theta: 0.5 # the angular velocity is also bounded by min_turning_radius in case of a carlike robot (r = v / omega) -> 2.39
+    max_vel_theta: 0.4 # the angular velocity is also bounded by min_turning_radius in case of a carlike robot (r = v / omega) -> 2.39
     # TODO
-    acc_lim_theta: 0.3
+    acc_lim_theta: 4.0
 
     # NOTE Non holonomic robot, hence we set weight_kinematics_nh to a very high value and max_vel_y 0
     max_vel_y: 0.0
@@ -68,19 +69,19 @@ TebLocalPlannerROS:
 
     # Optimization
 
-    no_inner_iterations: 5
+    no_inner_iterations: 10
     no_outer_iterations: 4
     optimization_activate: True
     optimization_verbose: False
-    penalty_epsilon: 0.05
+    penalty_epsilon: 0.1
     obstacle_cost_exponent: 4 # Optimize narrow gap movement (https://github.com/rst-tu-dortmund/teb_local_planner/pull/140)
     weight_max_vel_x: 2
-    weight_max_vel_theta: 1
+    weight_max_vel_theta: 10
     weight_acc_lim_x: 1
-    weight_acc_lim_theta: 10
+    weight_acc_lim_theta: 1
     weight_kinematics_nh: 10000.0 # Max value to almost prevent holonomic movement.
-    weight_kinematics_forward_drive: 1000.0 # A value around 1000 (max) almost prevents backward driving (but cannot be guaranteed).
-    weight_kinematics_turning_radius: 10 #1
+    weight_kinematics_forward_drive: 1000000.0 # A value around 1000 (max) almost prevents backward driving (but cannot be guaranteed).
+    weight_kinematics_turning_radius: 0.10 #1
     weight_optimaltime: 1 # must be > 0
     weight_shortest_path: 0
     weight_obstacle: 100 # Optimize narrow gap movement (https://github.com/rst-tu-dortmund/teb_local_planner/pull/140)
