@@ -1,0 +1,23 @@
+<?xml version="1.0"?> 
+
+<launch>
+
+    <include file="$(find kymco_maxxer90_bringup)/launch/joy_teleop.launch"/>
+
+    <include file="$(find kymco_maxxer90_navigation)/launch/move_base.launch"/>
+
+    <include file="$(find kymco_maxxer90_navigation)/launch/rs_vo.launch">
+        <arg name="offline" value="true"/>
+    </include>
+
+    <node pkg="twist_mux" type="twist_mux" name="twist_mux">
+        <rosparam command="load" file="$(find kymco_maxxer90_bringup)/config/twist_mux.yaml" />
+        <remap from="cmd_vel_out" to="/kymco_maxxer90_ackermann_steering_controller/cmd_vel"/>
+    </node>
+
+    <node pkg="tf" type="static_transform_publisher" name="static_world_map" args="0 0 0 0 0 0 world map 10"/>
+    
+    <node pkg="irta_canopy_detection" type="iRTA_canopy_detection_RF.py" name="irta_canopy_detection"/>
+
+</launch>
+
