@@ -256,6 +256,13 @@
         <child link="rear_plate_link" />
     </joint>
 
+    <link name="spray_valve_link"/>
+    <joint name="spray_valve_joint" type="fixed">
+        <origin xyz="-0.7 0.2 0.9" rpy="0 0 1.57079632679"/>
+        <parent link="base_link" />
+        <child link="spray_valve_link" />
+    </joint>
+
     <gazebo reference="rear_plate_link">
         <material>Gazebo/Grey</material>
     </gazebo>"
@@ -525,6 +532,14 @@
         <child link="camera_link"/>
     </joint>
 
+    <link name="webcamera_link"/>
+
+    <joint name="webcamera_joint" type="fixed">
+        <origin xyz="0.4 0.15 0.69" rpy="0 0 0.2"/>
+        <parent link="base_link"/>
+        <child link="webcamera_link"/>
+    </joint>
+
     <link name="rgbd_optical_camera_frame"/>
 
     <joint name="rgbd_optical_camera_joint" type="fixed">
@@ -583,6 +598,42 @@
         </sensor>
     </gazebo>
 
+    <gazebo reference="webcamera_link">
+    <sensor type="camera" name="webcam">
+      <update_rate>30.0</update_rate>
+      <camera name="usb_cam">
+        <horizontal_fov>1.3962634</horizontal_fov>
+        <image>
+          <width>640</width>
+          <height>480</height>
+          <format>R8G8B8</format>
+        </image>
+        <clip>
+          <near>0.02</near>
+          <far>100</far>
+        </clip>
+        <noise>
+          <type>gaussian</type>
+          <mean>0.0</mean>
+          <stddev>0.007</stddev>
+        </noise>
+      </camera>
+      <plugin name="camera_controller" filename="libgazebo_ros_camera.so">
+        <alwaysOn>true</alwaysOn>
+        <updateRate>0.0</updateRate>
+        <cameraName>usb_cam</cameraName>
+        <imageTopicName>image_raw</imageTopicName>
+        <cameraInfoTopicName>camera_info</cameraInfoTopicName>
+        <frameName>webcamera_link</frameName>
+        <hackBaseline>0.07</hackBaseline>
+        <distortionK1>0.0</distortionK1>
+        <distortionK2>0.0</distortionK2>
+        <distortionK3>0.00</distortionK3>
+        <distortionT1>0.00</distortionT1>
+        <distortionT2>0.000</distortionT2>
+      </plugin>
+    </sensor>
+  </gazebo>
 
     <!-- Gazebo plugins -->
     <gazebo>
