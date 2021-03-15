@@ -6,6 +6,41 @@
         <arg name="align_depth" value="true"/>
         <arg name="linear_accel_cov" value="1.0"/>
         <arg name="unite_imu_method" value="linear_interpolation"/>
+        <include file="$(find robot_localization)/launch/ukf_template.launch"/>
+        <param name="/ukf_se/frequency" value="300"/>
+        <param name="/ukf_se/two_d_mode" value="true"/>
+        <param name="/ukf_se/base_link_frame" value="base_link"/>
+        <param name="/ukf_se/odom0" value="rtabmap/odom"/>
+        <rosparam param="/ukf_se/odom0_config">[true,true,true,
+                                                true,true,true,
+                                                true,false,true,
+                                                true,true,true,
+                                                true,false,true]
+        </rosparam>
+        <param name="/ukf_se/odom0_relative" value="true"/>
+        <param name="/ukf_se/odom0_pose_rejection_threshold" value="10000000"/>
+        <param name="/ukf_se/odom0_twist_rejection_threshold" value="10000000"/>
+
+        <param name="/ukf_se/imu0" value="/imu/data"/>
+        <rosparam param="/ukf_se/imu0_config">[false, false, false,
+                                               true,  true,  true,
+                                               true,  false,  true,
+                                               true,  true,  true,
+                                               true,  false,  true]
+        </rosparam>
+        <param name="/ukf_se/imu0_differential" value="true"/>
+        <param name="/ukf_se/imu0_relative" value="false"/>
+
+        <param name="/ukf_se/odom1" value="/kymco_maxxer90_ackermann_steering_controller/odom"/>
+        <rosparam param="/ukf_se/odom1_config">[true, true, false,
+                                               false,  false,  true,
+                                               true,  true,  false,
+                                               false,  false,  true,
+                                               true,  true,  false]
+        </rosparam>
+        <param name="/ukf_se/odom1_differential" value="false"/>
+        <param name="/ukf_se/odom1_relative" value="true"/>
+        <param name="/ukf_se/use_control" value="false"/>
     </include>
     
     <node pkg="imu_filter_madgwick" type="imu_filter_node" name="ImuFilter">
@@ -19,7 +54,9 @@
         <arg name="args" value="--delete_db_on_start /rtabmap/proj_map:=/map"/>
         <!-- <arg name="localization" value="true"/> -->
         <arg name="rgb_topic" value="/camera/color/image_raw"/>
-        <arg name="depth_topic" value="/camera/aligned_depth_to_color/image_raw"/>
+        
+        <arg unless="$(arg offline)" name="depth_topic" value="/camera/aligned_depth_to_color/image_raw"/>
+        <arg if="$(arg offline)" name="depth_topic" value="/camera/depth/image_raw"/>
         <arg name="camera_info_topic" value="/camera/color/camera_info"/>
         <arg name="depth_camera_info_topic" value="/camera/depth/camera_info"/>
         <arg name="frame_id" value="base_link"/>
@@ -27,39 +64,4 @@
         <arg name="rviz" value="false"/>
     </include>
 
-    <include file="$(find robot_localization)/launch/ukf_template.launch"/>
-    <param name="/ukf_se/frequency" value="300"/>
-    <param name="/ukf_se/two_d_mode" value="true"/>
-    <param name="/ukf_se/base_link_frame" value="base_link"/>
-    <param name="/ukf_se/odom0" value="rtabmap/odom"/>
-    <rosparam param="/ukf_se/odom0_config">[true,true,true,
-                                            true,true,true,
-                                            true,false,true,
-                                            true,true,true,
-                                            true,false,true]
-    </rosparam>
-    <param name="/ukf_se/odom0_relative" value="true"/>
-    <param name="/ukf_se/odom0_pose_rejection_threshold" value="10000000"/>
-    <param name="/ukf_se/odom0_twist_rejection_threshold" value="10000000"/>
-
-    <param name="/ukf_se/imu0" value="/imu/data"/>
-    <rosparam param="/ukf_se/imu0_config">[false, false, false,
-                                           true,  true,  true,
-                                           true,  false,  true,
-                                           true,  true,  true,
-                                           true,  false,  true]
-    </rosparam>
-    <param name="/ukf_se/imu0_differential" value="true"/>
-    <param name="/ukf_se/imu0_relative" value="false"/>
-
-    <param name="/ukf_se/odom1" value="/kymco_maxxer90_ackermann_steering_controller/odom"/>
-    <rosparam param="/ukf_se/odom1_config">[true, true, false,
-                                           false,  false,  true,
-                                           true,  true,  false,
-                                           false,  false,  true,
-                                           true,  true,  false]
-    </rosparam>
-    <param name="/ukf_se/odom1_differential" value="false"/>
-    <param name="/ukf_se/odom1_relative" value="true"/>
-    <param name="/ukf_se/use_control" value="false"/>
 </launch>
